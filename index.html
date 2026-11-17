@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0f3f3a">
+<title>جوال ضايع 📵</title>
+<meta name="description" content="لقيت جوال موظف سيرف… افتحه وشوف وش فيه 👀">
+<meta property="og:title" content="لقيت جوال ضايع 📵">
+<meta property="og:description" content="جوال موظف في سيرف ضايع… افتحه وشوف وش فيه 👀">
+<meta property="og:image" content="img/sv_banner.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ ألوان سيرف (من الشعار) ============ */
+:root{
+  --teal:#14968A;     /* الأخضر الفيروزي */
+  --teal2:#13756C;    /* الأوسط */
+  --dark:#125C55;     /* الغامق */
+  --darker:#104A44;   /* الأغمق */
+  --gray:#C6C6C5;     /* الرمادي */
+  --ios-bg:#F2F2F7; --ios-sep:#E5E5EA; --ios-text:#000; --ios-sub:#8E8E93;
+  --blue:#007AFF; --red:#FF3B30; --green:#34C759;
+  --font:"SF Arabic","IBM Plex Sans Arabic",-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#0b2522;font-family:var(--font);overflow:hidden;user-select:none;-webkit-user-select:none}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+input{font:inherit}
+
+/* ============ إطار الجوال ============ */
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 30% 20%,#14968a33,transparent 50%),radial-gradient(circle at 80% 90%,#125c5544,transparent 50%),#0b2522}
+#phone{position:relative;width:390px;height:844px;border-radius:54px;overflow:hidden;background:#000;
+  box-shadow:0 0 0 11px #1c1c1e,0 0 0 13px #3a3a3c,0 30px 80px #000a}
+#phone::before{content:"";position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:100}
+#phone.full{position:fixed;top:0;left:0;border-radius:0;box-shadow:none;transform-origin:top left}
+#phone.full::before{display:none}
+#phone.short .search{display:none}
+#phone.short #lock .time{font-size:84px}
+#phone.short #lock .lost{top:232px}
+#phone.short #lock .notifs{top:335px}
+.screen{position:absolute;inset:0;overflow:hidden}
+
+/* ============ شريط الحالة ============ */
+#sb{position:absolute;top:0;left:0;right:0;height:50px;z-index:90;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 32px 0;color:#fff;font-weight:600;font-size:16px;direction:ltr;pointer-events:none;transition:color .3s}
+#sb.dark{color:#000}
+#sb .r{display:flex;gap:6px;align-items:center}
+#sb svg{fill:currentColor}
+.batt{width:26px;height:12px;border:1.5px solid currentColor;border-radius:4px;opacity:.9;position:relative;padding:1.5px}
+.batt::after{content:"";position:absolute;right:-4px;top:3px;width:2px;height:4px;background:currentColor;border-radius:0 2px 2px 0}
+.batt i{display:block;height:100%;width:12%;background:#FF3B30;border-radius:1.5px}
+
+/* ============ الخلفية ============ */
+.wall{background:
+  linear-gradient(160deg,#14968a 0%,#13756c 35%,#104a44 75%,#0a2e2a 100%)}
+.wall::before{content:"";position:absolute;inset:0;opacity:.18;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='104'%3E%3Cpath d='M0 0h60L30 52zM60 0h60L90 52zM30 52h60L60 104z' fill='none' stroke='%23fff' stroke-width='1'/%3E%3C/svg%3E")}
+
+/* ============ شاشة القفل ============ */
+#lock{color:#fff;z-index:20;transition:transform .45s cubic-bezier(.3,.7,.2,1),opacity .45s}
+#lock.gone{transform:translateY(-100%);opacity:.6;pointer-events:none}
+#lock .lk{position:absolute;top:58px;width:100%;text-align:center;font-size:18px;opacity:.9}
+#lock .date{position:absolute;top:88px;width:100%;text-align:center;font-size:20px;font-weight:500;opacity:.9}
+#lock .time{position:absolute;top:110px;width:100%;text-align:center;font-size:96px;font-weight:600;letter-spacing:-2px;direction:ltr;line-height:1.1}
+#lock .lost{position:absolute;top:250px;left:20px;right:20px;background:#00000040;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-radius:22px;padding:16px;text-align:center}
+#lock .lost b{display:block;font-size:17px;margin-bottom:4px}
+#lock .lost span{font-size:14px;opacity:.85;line-height:1.6}
+#lock .notifs{position:absolute;top:365px;left:12px;right:12px;display:flex;flex-direction:column;gap:8px}
+.ln{background:#ffffffd0;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#000;border-radius:20px;padding:11px 13px;display:flex;gap:10px;align-items:center;animation:pop .5s backwards}
+.ln:nth-child(2){animation-delay:.1s}.ln:nth-child(3){animation-delay:.2s}
+.ln .ic{width:36px;height:36px;border-radius:9px;flex:none;overflow:hidden}
+.ln .tx{flex:1;min-width:0}.ln .tt{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.ln .tt small{font-weight:400;color:#666;font-size:12px}
+.ln p{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#lock .bottom{position:absolute;bottom:30px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 46px}
+#lock .round{width:50px;height:50px;border-radius:50%;background:#00000040;backdrop-filter:blur(10px);display:grid;place-items:center;font-size:20px}
+#lock .swipe{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:14px;opacity:.85;animation:bob 1.8s infinite}
+@keyframes bob{50%{transform:translateY(-6px);opacity:.5}}
+@keyframes pop{from{transform:scale(.9);opacity:0}}
+
+/* ============ الشاشة الرئيسية ============ */
+#home{z-index:10;color:#fff}
+#home .inner{position:absolute;top:58px;left:0;right:0;bottom:0;padding:0 18px}
+.widgets{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px}
+.wd{height:160px;border-radius:22px;padding:14px;position:relative;overflow:hidden}
+.wd.weather{background:linear-gradient(180deg,#2a8fd8,#5ab4ef)}
+.wd.weather .c{font-size:15px;font-weight:600}.wd.weather .d{font-size:46px;font-weight:300;line-height:1.1;direction:ltr;text-align:right}
+.wd.weather .s{font-size:13px;position:absolute;bottom:14px}
+.wd.cal{background:#fff;color:#000}
+.wd.cal .m{color:var(--red);font-size:12px;font-weight:700}.wd.cal .n{font-size:30px;font-weight:600;line-height:1.1}
+.wd.cal .e{font-size:12px;border-right:3px solid var(--teal);padding-right:6px;margin-top:6px;line-height:1.35}
+.wd.cal .e small{display:block;color:#888}
+.wlabel{text-align:center;font-size:11px;margin-top:-10px;margin-bottom:10px;opacity:.9}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);row-gap:20px;column-gap:10px;justify-items:center}
+.app{display:flex;flex-direction:column;align-items:center;gap:5px;width:70px;position:relative}
+.app .ico{width:62px;height:62px;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px #0003;transition:transform .15s}
+.app:active .ico{transform:scale(.88)}
+.app .ico svg{width:100%;height:100%;display:block}
+.app span{font-size:11.5px;white-space:nowrap;text-shadow:0 1px 3px #0006}
+.badge{position:absolute;top:-6px;left:-4px;min-width:23px;height:23px;padding:0 6px;border-radius:12px;background:var(--red);color:#fff;font-size:13px;font-weight:600;display:grid;place-items:center;z-index:2;box-shadow:0 1px 3px #0004}
+.badge:empty{display:none}
+.search{margin:22px auto 0;width:84px;height:30px;border-radius:15px;background:#ffffff33;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;font-size:13px;gap:4px}
+.dock{position:absolute;bottom:14px;left:12px;right:12px;height:94px;border-radius:32px;background:#ffffff33;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;justify-content:space-around;align-items:center;padding:0 6px}
+.dock .app span{display:none}
+
+/* ============ التطبيق المفتوح ============ */
+#app{z-index:30;background:#fff;transform:scale(.3);opacity:0;pointer-events:none;transition:transform .35s cubic-bezier(.3,.7,.2,1),opacity .25s;border-radius:40px}
+#app.open{transform:none;opacity:1;pointer-events:auto;border-radius:0}
+.view{position:absolute;inset:0;background:var(--ios-bg);display:flex;flex-direction:column;color:#000;transition:transform .32s cubic-bezier(.3,.7,.2,1)}
+.view.enter{transform:translateX(-100%)}
+.view.under{transform:translateX(30%)}
+.nav{padding:54px 16px 8px;background:#f9f9f9ee;backdrop-filter:blur(20px);border-bottom:.5px solid #0002;flex:none;position:relative;z-index:2}
+.nav .row{display:flex;justify-content:space-between;align-items:center;min-height:32px}
+.nav .back{color:var(--blue);font-size:17px;display:flex;align-items:center;gap:2px}
+.nav .ttl{font-size:17px;font-weight:600;position:absolute;left:0;right:0;text-align:center;pointer-events:none}
+.nav h1{font-size:32px;font-weight:700;margin-top:4px}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:40px}
+.list{background:#fff;margin:14px 16px;border-radius:12px;overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:.5px solid var(--ios-sep);cursor:pointer}
+.li:last-child{border-bottom:0}
+.li:active{background:#e5e5ea}
+.chev{color:#c4c4c6;font-size:18px}
+
+/* زر الرجوع للرئيسية */
+#homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#fff;z-index:95;opacity:.9;cursor:pointer}
+#homebar::after{content:"";position:absolute;inset:-14px -20px}
+#homebar.dark{background:#000}
+
+/* ============ إشعار منسدل ============ */
+#banner{position:absolute;top:10px;left:10px;right:10px;z-index:96;background:#f5f5f7f2;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border-radius:22px;padding:12px 14px;display:flex;gap:10px;align-items:center;color:#000;box-shadow:0 8px 30px #0004;
+  transform:translateY(-140%);transition:transform .45s cubic-bezier(.3,1.3,.5,1);cursor:pointer}
+#banner.show{transform:none}
+#banner .ic{width:38px;height:38px;border-radius:9px;overflow:hidden;flex:none}
+#banner .tx{flex:1;min-width:0}
+#banner .tt{display:flex;justify-content:space-between;font-weight:600;font-size:14.5px}
+#banner .tt small{font-weight:400;color:#777;font-size:12px}
+#banner p{font-size:14.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ============ مكالمة ============ */
+#call{position:absolute;inset:0;z-index:97;color:#fff;display:none;flex-direction:column;align-items:center;
+  background:linear-gradient(180deg,#3a4b4a,#1b2524)}
+#call.show{display:flex;animation:fadein .3s}
+@keyframes fadein{from{opacity:0}}
+#call .av{width:90px;height:90px;border-radius:50%;background:linear-gradient(#a4a9b0,#7d838c);display:grid;place-items:center;font-size:40px;margin-top:110px}
+#call .nm{font-size:32px;margin-top:16px;font-weight:500}
+#call .st{font-size:17px;opacity:.75;margin-top:6px;direction:ltr}
+#call .sub{margin:40px 30px 0;min-height:120px;text-align:center;font-size:19px;line-height:1.6;}
+#call .sub p{animation:fadein .4s}
+#call .btns{position:absolute;bottom:90px;left:0;right:0;display:flex;justify-content:space-around;direction:ltr}
+#call .cb{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px}
+#call .cb i{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-style:normal}
+#call .cb svg{width:34px;height:34px;fill:#fff}
+.dec i{background:var(--red)}.acc i{background:var(--green);animation:ring 1s infinite}
+@keyframes ring{0%,100%{transform:rotate(0)}10%{transform:rotate(-14deg)}20%{transform:rotate(14deg)}30%{transform:rotate(-10deg)}40%{transform:rotate(0)}}
+
+/* ============ توست ============ */
+#toast{position:absolute;bottom:120px;left:50%;transform:translate(-50%,20px);background:#1c1c1ee6;color:#fff;padding:10px 18px;border-radius:20px;font-size:14.5px;z-index:99;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ============ الصور ============ */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.pgrid div{aspect-ratio:1;background-size:cover;background-position:center;cursor:pointer;background-color:#ddd}
+#viewer{position:absolute;inset:0;background:#000;z-index:5;display:flex;flex-direction:column}
+#viewer .img{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#viewer img{max-width:100%;max-height:100%;object-fit:contain}
+#viewer .top{padding:54px 16px 10px;display:flex;justify-content:space-between;color:#fff;font-size:15px}
+#viewer .top button{color:var(--blue);font-size:17px}
+#viewer .arrows{display:flex;justify-content:space-between;padding:14px 30px 40px;color:#fff;font-size:28px}
+
+/* ============ واتساب ============ */
+.wa-list .li{padding:10px 14px}
+.av{width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:24px;color:#fff;font-weight:600;overflow:hidden;background-size:cover;background-position:center}
+.wa-meta{flex:1;min-width:0}
+.wa-meta .t{display:flex;justify-content:space-between;align-items:center}
+.wa-meta b{font-size:16.5px;font-weight:600}
+.wa-meta small{color:var(--ios-sub);font-size:13px}
+.wa-meta small.u{color:#25D366;font-weight:600}
+.wa-meta p{color:var(--ios-sub);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;display:flex;justify-content:space-between;gap:8px}
+.wa-meta .cnt{background:#25D366;color:#fff;font-size:12px;border-radius:11px;min-width:21px;height:21px;padding:0 6px;display:grid;place-items:center;flex:none}
+.chat{background:#efe7de;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' opacity='.07'%3E%3Cpath d='M10 10l10 6-10 6zM50 40a6 6 0 1 0 12 0a6 6 0 1 0-12 0M20 55h14v14H20z' fill='%23000'/%3E%3C/svg%3E");padding:10px 10px 20px}
+.cday{text-align:center;margin:10px 0;clear:both;padding-top:4px}.cday span{background:#fff;font-size:12.5px;padding:4px 10px;border-radius:8px;color:#555;box-shadow:0 1px 1px #0001}
+.msg{max-width:78%;padding:6px 9px 5px;border-radius:10px;margin:2px 0;font-size:15.5px;line-height:1.4;position:relative;box-shadow:0 1px .5px #0002;word-wrap:break-word;clear:both}
+.msg.in{background:#fff;float:right;border-top-right-radius:3px}
+.msg.out{background:#d9fdd3;float:left;border-top-left-radius:3px}
+.msg .who{font-size:13px;font-weight:600;display:block;margin-bottom:1px}
+.msg .tm{font-size:11px;color:#667781;float:left;margin:6px 8px 0 0;direction:ltr}
+.msg.out .tm::after{content:" ✓✓";color:#53bdeb;letter-spacing:-3px}
+.msg.out.seen0 .tm::after{color:#8696a0}
+.msg img{display:block;width:220px;border-radius:7px;margin:-2px -5px 2px;cursor:pointer}
+.voice{display:flex;align-items:center;gap:8px;min-width:200px}
+.voice .pl{width:0;height:0;border-style:solid;border-width:8px 13px 8px 0;border-color:transparent #667781 transparent transparent;transform:scaleX(-1)}
+.voice .wv{flex:1;height:22px;background:repeating-linear-gradient(90deg,#8696a0 0 2px,transparent 2px 5px);mask:linear-gradient(90deg,#000 0,#000 100%);-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M0 8h4v4H0zM5 5h4v10H5zM10 2h4v16h-4zM15 6h4v8h-4zM20 4h4v12h-4zM25 7h4v6h-4zM30 3h4v14h-4zM35 6h4v8h-4zM40 1h4v18h-4zM45 5h4v10h-4zM50 7h4v6h-4zM55 3h4v14h-4zM60 6h4v8h-4zM65 4h4v12h-4zM70 8h4v4h-4zM75 5h4v10h-4zM80 2h4v16h-4zM85 6h4v8h-4zM90 7h4v6h-4zM95 8h4v4h-4z'/%3E%3C/svg%3E");-webkit-mask-size:100% 100%}
+.voice small{font-size:12px;color:#667781}
+.clear{clear:both}
+.sysmsg{text-align:center;clear:both;margin:8px 0}.sysmsg span{background:#fef4c5;font-size:12.5px;padding:5px 10px;border-radius:8px;color:#54656f;display:inline-block}
+.composer{flex:none;background:#f6f6f6;padding:8px 10px 30px;display:flex;gap:8px;align-items:center;border-top:.5px solid #0002}
+.composer div{flex:1;background:#fff;border-radius:18px;padding:8px 14px;color:#999;font-size:15px;border:.5px solid #ddd}
+.composer i{font-style:normal;font-size:22px;color:var(--blue)}
+
+/* ============ الرسائل ============ */
+.sms{padding:12px}
+.sms .b{background:#e9e9eb;border-radius:18px;padding:9px 13px;max-width:80%;font-size:15.5px;line-height:1.4;margin:4px 0;float:right;clear:both}
+.sms .tsm{text-align:center;color:var(--ios-sub);font-size:12px;clear:both;padding:12px 0 4px}
+
+/* ============ الملاحظات ============ */
+.note-body{background:#fff;flex:1;overflow:auto;padding:16px 20px 40px;font-size:17px;line-height:1.75;white-space:pre-wrap}
+.note-body h2{font-size:26px;margin-bottom:6px;line-height:1.3}
+.note-body .nd{color:var(--ios-sub);font-size:13px;text-align:center;margin-bottom:10px}
+.notes-nav .back,.notes-nav .ttl{color:#E0A800}
+
+/* ============ الملفات / القفل ============ */
+.pin{flex:1;display:flex;flex-direction:column;align-items:center;padding-top:30px;background:#fff}
+.pin .lock-ic{font-size:40px}
+.pin h3{font-size:19px;margin:10px 0 4px}
+.pin p{color:var(--ios-sub);font-size:14px;min-height:20px;text-align:center;padding:0 30px}
+.dots{display:flex;gap:18px;margin:22px 0 28px;direction:ltr}
+.dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid #000}
+.dots i.f{background:#000}
+.dots.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.keys{display:grid;grid-template-columns:repeat(3,78px);gap:16px 24px;direction:ltr}
+.keys button{width:78px;height:78px;border-radius:50%;background:#e5e5ea;font-size:32px;font-weight:400}
+.keys button:active{background:#c7c7cc}
+.keys button.x{background:none;font-size:17px}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 10px;padding:20px 16px}
+.file{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;cursor:pointer}
+.file .fi{width:72px;height:88px;position:relative}
+.file b{font-size:12.5px;font-weight:500;word-break:break-all;line-height:1.3}
+.file small{font-size:11px;color:var(--ios-sub)}
+.doc{background:#fff;margin:16px;border-radius:8px;padding:22px 18px;box-shadow:0 2px 12px #0001;font-size:14.5px;line-height:1.7}
+.doc h2{font-size:19px;color:var(--dark);border-bottom:2px solid var(--teal);padding-bottom:6px;margin-bottom:12px}
+.doc table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+.doc td,.doc th{border:1px solid #ddd;padding:6px;text-align:center}
+.doc th{background:var(--teal);color:#fff;font-weight:600}
+.secret{text-align:center;padding:30px 20px}
+.secret .code{font-size:58px;font-weight:700;color:var(--dark);letter-spacing:4px;direction:ltr;margin:14px 0;border:3px dashed var(--teal);border-radius:18px;padding:6px 0;background:#14968a12}
+.btn{display:block;width:100%;padding:14px;border-radius:14px;background:var(--teal);color:#fff;font-size:16.5px;font-weight:600;text-align:center;text-decoration:none;margin-top:10px}
+.btn.ghost{background:#fff;color:var(--dark);border:1.5px solid var(--teal)}
+.btn.dark{background:var(--dark)}
+
+/* ============ الهاتف ============ */
+.seg{display:flex;background:#e3e3e8;border-radius:9px;padding:2px;margin:6px auto 0;width:200px}
+.seg button{flex:1;padding:5px;font-size:13px;border-radius:7px;font-weight:500}
+.seg button.on{background:#fff;box-shadow:0 1px 3px #0002}
+.rc{flex:1}.rc b{font-size:16.5px;font-weight:500}.rc b.miss{color:var(--red)}
+.rc small{display:block;color:var(--ios-sub);font-size:13px}
+.rtime{color:var(--ios-sub);font-size:14px}
+.tabbar{flex:none;display:flex;justify-content:space-around;background:#f9f9f9ee;border-top:.5px solid #0002;padding:7px 0 28px}
+.tabbar button{display:flex;flex-direction:column;align-items:center;font-size:10.5px;color:#999;gap:2px}
+.tabbar button.on{color:var(--blue)}
+.tabbar button i{font-style:normal;font-size:22px}
+
+/* ============ تطبيق سيرف ============ */
+.sv{background:#f4f7f7}
+.sv-head{background:linear-gradient(150deg,var(--teal),var(--darker));color:#fff;padding:56px 18px 60px;position:relative;overflow:hidden;flex:none}
+.sv-head::before{content:"";position:absolute;inset:0;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='70'%3E%3Cpath d='M0 0h40L20 35zM40 0h40L60 35zM20 35h40L40 70z' fill='none' stroke='%23fff'/%3E%3C/svg%3E")}
+.sv-head .top{display:flex;justify-content:space-between;align-items:center;position:relative}
+.sv-head .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px}
+.sv-head .logo svg{width:34px;height:34px;background:#fff;border-radius:9px;padding:4px}
+.sv-head h2{position:relative;font-size:22px;margin-top:18px}
+.sv-head p{position:relative;opacity:.85;font-size:14px;margin-top:2px}
+.sv-search{position:relative;margin:-30px 16px 0;background:#fff;border-radius:14px;padding:14px;box-shadow:0 6px 20px #0001;display:flex;gap:8px;color:#999;font-size:15px;z-index:2}
+.sv-sec{margin:20px 16px 0}
+.sv-sec h3{font-size:17px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.sv-sec h3 small{color:var(--teal);font-size:13px;font-weight:500}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cat{background:#fff;border-radius:16px;padding:14px 6px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px #0000000a}
+.cat:active{transform:scale(.96)}
+.cat i{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#14968a18;margin:0 auto 8px;font-size:24px;font-style:normal}
+.promo{border-radius:18px;overflow:hidden;position:relative;height:150px;background-size:cover;background-position:center}
+.promo::after{content:"";position:absolute;inset:0;background:linear-gradient(270deg,#104a44f0 10%,#104a4400 90%)}
+.promo div{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#fff;z-index:2;max-width:60%}
+.promo b{font-size:19px;display:block;line-height:1.35}
+.promo span{font-size:13px;opacity:.9}
+.order{background:#fff;border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center;margin-bottom:10px;box-shadow:0 2px 8px #0000000a}
+.order .oi{width:54px;height:54px;border-radius:12px;background-size:cover;background-position:center;flex:none}
+.order .ot{flex:1}.order b{font-size:15px}.order small{display:block;color:#888;font-size:12.5px;margin-top:2px}
+.pill{font-size:11.5px;padding:3px 9px;border-radius:10px;font-weight:600;white-space:nowrap}
+.pill.go{background:#fff4d6;color:#a77800}.pill.ok{background:#14968a1f;color:var(--dark)}.pill.cx{background:#ffe5e3;color:#c4271c}
+.track{height:6px;background:#e9eeee;border-radius:3px;margin-top:8px;overflow:hidden}.track i{display:block;height:100%;width:70%;background:var(--teal);border-radius:3px;animation:tr 2s ease-in-out infinite alternate}
+@keyframes tr{from{width:55%}to{width:75%}}
+.codebox{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 8px #0000000a}
+.codebox .r{display:flex;gap:8px}
+.codebox input{flex:1;border:1.5px solid #e1e7e7;border-radius:12px;padding:11px 12px;font-size:16px;direction:ltr;text-align:left;text-transform:uppercase;outline:none}
+.codebox input:focus{border-color:var(--teal)}
+.codebox button{background:var(--teal);color:#fff;border-radius:12px;padding:0 18px;font-weight:600}
+.codebox .res{font-size:14px;margin-top:8px;min-height:20px}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat{background:#fff;border-radius:14px;padding:12px;font-size:13px;display:flex;gap:8px;align-items:center;font-weight:600}
+.feat i{font-style:normal;font-size:22px}
+.sv-tab{flex:none;display:flex;justify-content:space-around;background:#fff;border-top:1px solid #eef;padding:8px 0 28px}
+.sv-tab button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#9aa}
+.sv-tab button.on{color:var(--teal);font-weight:600}
+.sv-tab i{font-style:normal;font-size:21px}
+.sheet-bg{position:absolute;inset:0;background:#0006;z-index:10;animation:fadein .2s}
+.sheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:22px 22px 0 0;padding:10px 18px 34px;z-index:11;animation:up .3s cubic-bezier(.3,.7,.2,1);max-height:80%;overflow:auto}
+@keyframes up{from{transform:translateY(100%)}}
+.sheet .grab{width:40px;height:5px;background:#ddd;border-radius:3px;margin:0 auto 14px}
+.sheet h3{font-size:20px;margin-bottom:6px}
+.sheet p{color:#666;font-size:14.5px;line-height:1.6}
+.sheet .ph{display:flex;gap:8px;overflow-x:auto;margin:14px -18px;padding:0 18px}
+.sheet .ph div{width:120px;height:160px;border-radius:12px;background-size:cover;background-position:center;flex:none}
+.sheet ul{list-style:none;margin:8px 0}.sheet li{padding:7px 0;border-bottom:1px solid #f0f0f0;font-size:15px}
+.sheet li::before{content:"✓ ";color:var(--teal);font-weight:700}
+
+/* ============ لعبة صلّحها ============ */
+.gm{background:radial-gradient(circle at 50% 0%,#14968a,#104a44 60%,#0a2e2a);color:#fff;flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.gm::before{content:"";position:absolute;inset:0;opacity:.1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='70'%3E%3Cpath d='M0 0h40L20 35zM40 0h40L60 35zM20 35h40L40 70z' fill='none' stroke='%23fff'/%3E%3C/svg%3E");pointer-events:none}
+.gm .wrap{position:relative;flex:1;display:flex;flex-direction:column;padding:60px 20px 30px}
+.gm .start{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.gm .start .big{font-size:80px;animation:spin 3s ease-in-out infinite}
+@keyframes spin{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
+.gm h1{font-size:44px;font-weight:700;margin:6px 0}
+.gm .start p{opacity:.85;font-size:16px;line-height:1.7;max-width:290px}
+.gbtn{background:#fff;color:var(--darker);font-weight:700;font-size:19px;padding:15px 40px;border-radius:30px;margin-top:26px;box-shadow:0 6px 0 #0004}
+.gbtn:active{transform:translateY(3px);box-shadow:0 3px 0 #0004}
+.gbtn.sm{font-size:15px;padding:12px 20px;margin-top:10px;width:100%}
+.gbtn.alt{background:#ffffff22;color:#fff;box-shadow:none;border:1.5px solid #ffffff55}
+.ghud{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:17px}
+.ghud .sc{background:#ffffff22;border-radius:14px;padding:5px 14px}
+.tbar{height:10px;background:#ffffff22;border-radius:5px;margin:12px 0 0;overflow:hidden}
+.tbar i{display:block;height:100%;background:linear-gradient(90deg,#ff5f57,#ffd23f,#5ee7a0);border-radius:5px;transition:width .25s linear}
+.fault{margin:24px 0 18px;background:#fff;color:#000;border-radius:24px;padding:22px 18px;text-align:center;box-shadow:0 10px 30px #0004;position:relative}
+.fault .em{font-size:64px;line-height:1}
+.fault .rm{display:inline-block;background:#14968a1f;color:var(--dark);font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:10px;margin:10px 0 6px}
+.fault b{display:block;font-size:20px;line-height:1.4}
+.fault.ok{animation:okk .45s}.fault.no{animation:shake .4s}
+@keyframes okk{50%{transform:scale(1.05)}}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{background:#ffffff1c;border:1.5px solid #ffffff40;border-radius:18px;padding:14px 8px;color:#fff;font-size:14.5px;font-weight:600;line-height:1.35;min-height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.opt i{font-style:normal;font-size:26px}
+.opt.good{background:#34c759;border-color:#34c759}.opt.bad{background:#ff3b30;border-color:#ff3b30}
+.gfb{text-align:center;min-height:44px;margin-top:12px;font-size:14.5px;line-height:1.5;opacity:.95}
+.combo{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);font-size:40px;font-weight:800;color:#ffd23f;text-shadow:0 3px 0 #0005;animation:cb .8s forwards;pointer-events:none;z-index:5}
+@keyframes cb{from{transform:translate(-50%,-30%) scale(.5);opacity:0}30%{transform:translate(-50%,-50%) scale(1.2);opacity:1}to{transform:translate(-50%,-90%);opacity:0}}
+.gend{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.gend .stars{font-size:46px;letter-spacing:6px;margin:6px 0}
+.gend .pts{font-size:64px;font-weight:800;line-height:1}
+.gend .rank{font-size:19px;font-weight:700;margin:8px 0 4px}
+.gend .best{opacity:.7;font-size:14px}
+.hint{background:#ffd23f;color:#3a2a00;border-radius:16px;padding:12px 14px;font-size:14.5px;line-height:1.6;margin:16px 0 4px;font-weight:600;animation:pop .5s}
+
+/* ============ الإعدادات / تقويم ============ */
+.prof{display:flex;gap:14px;align-items:center}
+.prof .av{width:60px;height:60px;font-size:26px}
+.sic svg{width:100%;height:100%}
+.sic{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:16px;flex:none}
+.li .lt{flex:1;font-size:16.5px}.li .rv{color:var(--ios-sub);font-size:15px}
+.ev{display:flex;gap:12px;padding:12px 16px;border-bottom:.5px solid var(--ios-sep);background:#fff}
+.ev .et{width:62px;color:var(--ios-sub);font-size:13.5px;direction:ltr;text-align:right;flex:none}
+.ev .eb{flex:1;border-right:4px solid var(--teal);padding-right:10px}
+.ev .eb b{font-size:15.5px;display:block}.ev .eb small{color:var(--ios-sub);font-size:13px}
+.calhead{background:#fff;padding:10px 16px;display:flex;justify-content:space-between;direction:rtl}
+.calhead div{text-align:center;font-size:12px;color:#888;width:40px}
+.calhead div b{display:grid;place-items:center;width:34px;height:34px;margin:4px auto 0;border-radius:50%;font-size:17px;color:#000;font-weight:500}
+.calhead div.on b{background:var(--red);color:#fff;font-weight:700}
+.confetti{position:absolute;top:-20px;width:10px;height:14px;z-index:200;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(900px) rotate(720deg)}}
+
+/* ============ تطبيق سيرف (نسخة من التطبيق) ============ */
+.sva{background:#fff;color:#0f1f1d;font-family:"Tajawal",var(--font)}
+.sva .body{padding-bottom:16px}
+.sva-hero{display:block;position:relative;line-height:0}
+.sva-hero img{width:100%;display:block}
+.sva-loc{margin:14px 16px 0;background:#fff;border-radius:12px;box-shadow:0 2px 14px #0000001a;padding:14px 16px;display:flex;align-items:center;gap:10px;font-size:15.5px;font-weight:500}
+.sva-loc .pin{color:#b9bfc4;font-size:20px}
+.sva-loc span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}
+.sva-loc svg{width:26px;height:26px}
+.sva h3{font-size:19px;font-weight:800;margin:30px 16px 14px}
+.sva-row{display:flex;gap:12px;overflow-x:auto;padding:0 16px 6px;scrollbar-width:none}
+.sva-row::-webkit-scrollbar{display:none}
+.sva-card{flex:none;width:300px;height:168px;border-radius:12px;overflow:hidden;background-size:cover;background-position:center;display:block;position:relative}
+.sva-card.alt{background:linear-gradient(135deg,#6fc3b5,#14968A 55%,#125C55);color:#fff;padding:18px;line-height:1.4}
+.sva-card.alt b{font-size:30px;font-weight:800;display:block}
+.sva-card.alt span{font-size:14px;opacity:.95}
+.sva-card.alt i{position:absolute;bottom:14px;right:18px;font-style:normal;background:#fff;color:var(--dark);font-size:12px;font-weight:700;padding:4px 10px;border-radius:10px}
+.sva-tile{flex:none;width:104px;text-align:center;text-decoration:none;color:#0f1f1d}
+.sva-tile .tb{width:104px;height:87px;border-radius:10px;background:#f2f4f5;display:grid;place-items:center;overflow:hidden}
+.sva-tile .tb img{width:100%;height:100%;object-fit:cover}
+.sva-tile .tb svg{width:42px;height:42px}
+.sva-tile span{display:block;font-size:17px;font-weight:500;margin-top:10px}
+.sva-tab{flex:none;display:flex;justify-content:space-around;background:#fff;border-top:1px solid #eceff0;padding:10px 0 26px}
+.sva-tab button{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:"Tajawal",var(--font);font-size:15px;font-weight:800;color:#c9cdcf}
+.sva-tab button.on{color:var(--teal)}
+.sva-tab svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sva-top{padding:58px 16px 10px;font-size:24px;font-weight:800}
+.sva-ord{margin:0 16px 12px;border:1px solid #eceff0;border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center}
+.sva-ord .oi{width:58px;height:58px;border-radius:10px;background-size:cover;background-position:center;flex:none}
+.sva-ord b{font-size:16px;font-weight:700;display:block}
+.sva-ord small{color:#8a9496;font-size:13px}
+.sva-ord .st{margin-right:auto;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:10px;background:#14968a1a;color:var(--dark);white-space:nowrap}
+.sva-ord .st.go{background:#fff3d6;color:#9a6c00}
+.sva-set{margin:0 16px;border-top:1px solid #eceff0}
+.sva-set a,.sva-set div{display:flex;align-items:center;gap:12px;padding:16px 4px;border-bottom:1px solid #eceff0;font-size:16.5px;font-weight:500;color:#0f1f1d;text-decoration:none}
+.sva-set i{font-style:normal;width:36px;height:36px;border-radius:10px;background:#f2f4f5;display:grid;place-items:center;font-size:18px;overflow:hidden}
+.sva-set span{flex:1}.sva-set em{font-style:normal;color:#b9bfc4}
+
+/* ============ لعبة نظّف السخان ============ */
+.hz{background:radial-gradient(circle at 50% 0%,#14968a,#104a44 62%,#0a2e2a);color:#fff;flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden;font-family:"Tajawal",var(--font)}
+.hz .wrap{position:relative;flex:1;display:flex;flex-direction:column;padding:56px 18px 26px}
+.hz-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.hz h1{font-size:40px;font-weight:800;margin:8px 0 4px}
+.hz p.lead{opacity:.9;font-size:16px;line-height:1.7;max-width:300px}
+.hz-hud{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:17px}
+.hz-hud .pill{background:#ffffff22;border-radius:14px;padding:5px 12px}
+.hz-meter{margin-top:12px}
+.hz-meter .lb{display:flex;justify-content:space-between;font-size:13px;opacity:.9;margin-bottom:5px}
+.hz-meter .bar{height:12px;background:#ffffff22;border-radius:6px;overflow:hidden}
+.hz-meter .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#d9a066,#b5651d);border-radius:6px;transition:width .15s}
+.hz-meter.danger .bar i{background:linear-gradient(90deg,#ff7a59,#ff3b30)}
+.hz-tank{position:relative;margin:16px auto 0;width:270px;height:370px;background:linear-gradient(90deg,#e9ecef,#fff 30%,#fff 70%,#dfe3e6);border-radius:46px;box-shadow:0 14px 34px #0006, inset 0 -6px 0 #0000000d}
+.hz-tank::before,.hz-tank::after{content:"";position:absolute;bottom:-18px;width:14px;height:22px;background:#b8bec4;border-radius:0 0 4px 4px}
+.hz-tank::before{left:70px}.hz-tank::after{right:70px}
+.hz-win{position:absolute;inset:28px 26px 40px;border-radius:26px;overflow:hidden;background:linear-gradient(90deg,#c98f55 0%,#9fd3d9 45%,#5cc0d2 100%);box-shadow:inset 0 0 0 4px #c9ced3}
+.hz-win.cold{background:linear-gradient(90deg,#9aa9b3,#bcd3dc 45%,#a7c5d1 100%)}
+.hz-rod{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:54px;height:62%;border:7px solid #cfd3d7;border-top:0;border-radius:0 0 30px 30px;opacity:.9}
+.hz-gauge{position:absolute;top:8px;right:50%;transform:translateX(50%);background:#fff;color:#104a44;border-radius:12px;padding:2px 10px;font-size:13px;font-weight:800;box-shadow:0 2px 6px #0002;z-index:3;white-space:nowrap}
+.hz-rock{position:absolute;width:52px;height:52px;margin:-26px 0 0 -26px;border:0;padding:0;background:none;cursor:pointer;z-index:2;animation:rockIn .25s ease-out;touch-action:manipulation}
+.hz-rock span{display:block;width:100%;height:100%;border-radius:48% 52% 45% 55%/55% 45% 55% 45%;background:radial-gradient(circle at 35% 30%,#e4c49a,#b8895a 55%,#8a6038);box-shadow:inset -4px -5px 0 #0000002a,0 2px 4px #0003}
+.hz-rock.big span{transform:scale(1.15)}
+.hz-rock.pop{animation:rockOut .25s forwards;pointer-events:none}
+@keyframes rockIn{from{transform:scale(0)}}
+@keyframes rockOut{to{transform:scale(1.6);opacity:0}}
+.hz-bub{position:absolute;bottom:-10px;width:8px;height:8px;border-radius:50%;background:#ffffffaa;animation:bub linear forwards;pointer-events:none}
+@keyframes bub{to{transform:translateY(-330px);opacity:0}}
+.hz-plus{position:absolute;font-weight:800;color:#fff;text-shadow:0 2px 0 #0005;font-size:18px;pointer-events:none;animation:plus .6s forwards;z-index:4}
+@keyframes plus{to{transform:translateY(-30px);opacity:0}}
+.hz-tip{text-align:center;font-size:14px;opacity:.85;margin-top:22px}
+.hz-code{font-size:56px;font-weight:800;letter-spacing:4px;direction:ltr;border:3px dashed #ffd23f;border-radius:18px;padding:4px 26px;margin:14px 0 6px;background:#ffd23f1a;color:#ffd23f}
+.hz .gbtn{font-family:"Tajawal",var(--font)}
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="phone">
+
+  <!-- شريط الحالة -->
+  <div id="sb">
+    <span id="sbtime">9:41</span>
+    <span class="r">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1" opacity=".35"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .4 10.4 10.4 0 0 0 .8 3.3L2 4.6a8.6 8.6 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.3-1.3A6.6 6.6 0 0 0 8 4a6.6 6.6 0 0 0-4.7 1.8l1.3 1.3C5.5 6.3 6.7 5.8 8 5.8zm0 3.6c.5 0 1 .2 1.3.6L8 11.5 6.7 10c.3-.4.8-.6 1.3-.6z"/></svg>
+      <span class="batt"><i></i></span>
+    </span>
+  </div>
+
+  <!-- الشاشة الرئيسية -->
+  <div id="home" class="screen wall">
+    <div class="inner">
+      <div class="widgets">
+        <div class="wd weather" onclick="toast('🌤️ الرياض 38°')">
+          <div class="c">الرياض ➤</div>
+          <div class="d">38°</div>
+          <div class="s">☀️ مشمس<br>العظمى 41° الصغرى 27°</div>
+        </div>
+        <div class="wd cal" onclick="openApp('calendar')">
+          <div class="m" id="wdDay">الثلاثاء</div>
+          <div class="n" id="wdNum">17</div>
+          <div class="e">اجتماع الصباح<small>7:45 ص</small></div>
+          <div class="e">متابعة حملة السخانات 📣<small>10:00 ص</small></div>
+        </div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="search">🔍 بحث</div>
+    </div>
+    <div class="dock" id="dock"></div>
+  </div>
+
+  <!-- شاشة القفل -->
+  <div id="lock" class="screen wall">
+    <div class="lk">🔒</div>
+    <div class="date" id="lkDate"></div>
+    <div class="time" id="lkTime">9:41</div>
+    <div class="lost">
+      <b>📵 جوال موظف سيرف</b>
+      <span>لو لقيته رجّعه…<br>لأنه مليان أكواد خصم 🤫</span>
+    </div>
+    <div class="notifs" id="lkNotifs"></div>
+    <div class="bottom"><div class="round">🔦</div><div class="round">📷</div></div>
+    <div class="swipe">اسحب للأعلى أو اضغط للفتح ⌃</div>
+  </div>
+
+  <!-- التطبيق المفتوح -->
+  <div id="app" class="screen"></div>
+
+  <!-- إشعار -->
+  <div id="banner"><div class="ic"></div><div class="tx"><div class="tt"><span></span><small>الآن</small></div><p></p></div></div>
+
+  <!-- مكالمة -->
+  <div id="call">
+    <div class="av">👤</div>
+    <div class="nm"></div>
+    <div class="st"></div>
+    <div class="sub"></div>
+    <div class="btns">
+      <button class="cb dec" onclick="Call.decline()"><i><svg viewBox="0 0 24 24" style="transform:rotate(135deg)"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg></i>رفض</button>
+      <button class="cb acc" onclick="Call.accept()"><i><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg></i>رد</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <div id="homebar" onclick="goHome()"></div>
+</div>
+</div>
+
+<script>
+/* =====================================================================
+   ✏️  الإعدادات – عدّل من هنا بدون ما تلمس باقي الكود
+   ===================================================================== */
+const CONFIG = {
+  ownerName: "سلطان",                 // اسم صاحب الجوال (موظف سيرف)
+  filesPin: "7686",                    // رمز قفل الملفات = "الإجمالي" في ملاحظة مصاريف سبتمبر
+  secretCode: "S15",                   // الكود السري داخل الملف السري
+  secretPercent: "15%",
+  marketingCode: "X10",                // يظهر في قروب التسويق
+  techCode: "T10",                     // الفني يعطيه للعميل
+  gameCode: "M10",                     // جائزة لعبة نظّف السخان
+  codesPercent: "10%",
+  heater: {normal:"80", normalOld:"100", hidden:"120", hiddenOld:"150"},
+  appStore: "https://apps.apple.com/sa/app/%D8%B3%D9%8A%D8%B1%D9%81/id6446612274?l=ar",
+  tiktok: "https://www.tiktok.com/@serve__app",
+  tiktokHandle: "@serve__app",
+  gameName: "نظّف السخان",
+  location: "العليا، الرياض 12214، السعودية",
+};
+
+/* الصور: في نسخة المعاينة تنحفظ داخل الصفحة، وفي نسخة الرفع تنقرا من مجلد img */
+const IMGDATA = {};
+const S = n => IMGDATA[n] || ("img/" + n);
+
+/* =====================================================================
+   الأيقونات
+   ===================================================================== */
+const SERVE_MARK = `<svg viewBox="330 190 1272 1132" xmlns="http://www.w3.org/2000/svg"><path fill="#14968A" d="M332 193h322l-171 272z"/><path fill="#125C55" d="M654 193 483 465h317z"/><path fill="#14968A" d="M483 465h317L648 727z"/><path fill="#14968A" d="M803 461h340L983 753z"/><path fill="#104A44" d="M1140 465 983 753h313z"/><path fill="#13756C" d="M983 753h313l-156 282z"/><path fill="#14968A" d="M794 1035l346-4-169 289z"/><path fill="#14968A" d="M1288 199 1143 461h313z"/><path fill="#13756C" d="M1288 199h312l-144 262z"/></svg>`;
+
+const ICONS = {
+  serve:`<img src="${S('sv_icon.png')}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06)">`,
+  game:`<svg viewBox="0 0 100 100"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14968A"/><stop offset="1" stop-color="#104A44"/></linearGradient><linearGradient id="gw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9a066"/><stop offset=".5" stop-color="#7fd3e0"/><stop offset="1" stop-color="#4bb8cc"/></linearGradient></defs><rect width="100" height="100" fill="url(#gg)"/><rect x="24" y="16" width="52" height="66" rx="12" fill="#fff"/><rect x="31" y="26" width="38" height="44" rx="7" fill="url(#gw)"/><path d="M42 30v28a8 8 0 0 0 16 0V30" fill="none" stroke="#c9ccd0" stroke-width="4"/><circle cx="37" cy="64" r="4" fill="#a9845a"/><circle cx="45" cy="66" r="3" fill="#a9845a"/><circle cx="62" cy="40" r="2" fill="#fff" opacity=".8"/><circle cx="64" cy="50" r="1.5" fill="#fff" opacity=".8"/><rect x="38" y="82" width="5" height="7" fill="#c9ccd0"/><rect x="57" y="82" width="5" height="7" fill="#c9ccd0"/><circle cx="76" cy="76" r="13" fill="#FFD23F"/><text x="76" y="82" text-anchor="middle" font-size="16" font-weight="800" fill="#104A44" font-family="Arial">%</text></svg>`,
+  tiktok:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/><g transform="translate(26 20)"><path d="M33 0h10c1 8 6 14 14 15v10c-5 0-10-2-14-4v21a19 19 0 1 1-17-19v10a9 9 0 1 0 7 9z" fill="#25F4EE" transform="translate(-2 -2)"/><path d="M33 0h10c1 8 6 14 14 15v10c-5 0-10-2-14-4v21a19 19 0 1 1-17-19v10a9 9 0 1 0 7 9z" fill="#FE2C55" transform="translate(2 2)"/><path d="M33 0h10c1 8 6 14 14 15v10c-5 0-10-2-14-4v21a19 19 0 1 1-17-19v10a9 9 0 1 0 7 9z" fill="#fff"/></g></svg>`,
+  photos:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/><g transform="translate(50 50)">${["#FDB827","#F68A1E","#EF4136","#C3307F","#7C4199","#3C76BC","#2CB3C0","#8CC63F"].map((c,i)=>`<ellipse rx="11" ry="20" cy="-17" fill="${c}" opacity=".85" transform="rotate(${i*45})"/>`).join('')}</g></svg>`,
+  whatsapp:`<svg viewBox="0 0 100 100"><defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5FFC7B"/><stop offset="1" stop-color="#28B53A"/></linearGradient></defs><rect width="100" height="100" fill="url(#wg)"/><path d="M50 17a32 32 0 0 0-27.6 48.3L18 82l17.2-4.5A32 32 0 1 0 50 17z" fill="none" stroke="#fff" stroke-width="6"/><path d="M38 33c1-1 3-1 4 0l4 8c.5 1 0 2.4-.8 3.2l-2 2c2 4.5 6 8.6 10.6 10.6l2-2c.8-.8 2.2-1.2 3.2-.8l8 4c1 1 1 3 0 4-3 3-6 4-10 3-10-3-18-11-21-21-1-4 0-7 3-10z" fill="#fff"/></svg>`,
+  phone:`<svg viewBox="0 0 100 100"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6BF27F"/><stop offset="1" stop-color="#2DBE45"/></linearGradient></defs><rect width="100" height="100" fill="url(#pg)"/><path d="M33 22c2-2 5-2 7 0l7 10c1.5 2 1 4.5-.6 6l-4 4c3 7 9 13 16 16l4-4c1.5-1.6 4-2 6-.6l10 7c2 2 2 5 0 7-5 5-11 6-17 4-15-5-27-17-32-32-2-6-1-12 4-17z" fill="#fff"/></svg>`,
+  messages:`<svg viewBox="0 0 100 100"><defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6BF27F"/><stop offset="1" stop-color="#2DBE45"/></linearGradient></defs><rect width="100" height="100" fill="url(#mg)"/><path d="M50 22c-19 0-34 12-34 27 0 9 5 16 13 21-1 4-3 8-7 11 7 0 13-3 17-6l11 1c19 0 34-12 34-27S69 22 50 22z" fill="#fff"/></svg>`,
+  notes:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/><rect width="100" height="30" fill="#FDCB3C"/><rect width="100" height="2" y="30" fill="#e5b42a"/>${[44,56,68,80].map(y=>`<rect x="12" y="${y}" width="76" height="1.6" fill="#ddd"/>`).join('')}<g fill="#c8c8c8">${[...Array(12)].map((_,i)=>`<circle cx="${10+i*7.3}" cy="36" r="1.2"/>`).join('')}</g></svg>`,
+  files:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/><path d="M16 30c0-3 2-5 5-5h20l6 6h32c3 0 5 2 5 5v36c0 3-2 5-5 5H21c-3 0-5-2-5-5z" fill="#1A8CFF"/><path d="M16 38h68v34c0 3-2 5-5 5H21c-3 0-5-2-5-5z" fill="#47A6FF"/></svg>`,
+  calendar:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/><text x="50" y="30" text-anchor="middle" font-size="15" fill="#FF3B30" font-family="-apple-system,Arial" font-weight="600" id="calIcoDay">الثلاثاء</text><text x="50" y="80" text-anchor="middle" font-size="50" fill="#000" font-family="-apple-system,Arial" font-weight="300" id="calIcoNum">17</text></svg>`,
+  settings:`<svg viewBox="0 0 100 100"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9EA3AA"/><stop offset="1" stop-color="#6E737A"/></linearGradient></defs><rect width="100" height="100" fill="url(#sg)"/><g transform="translate(50 50)" fill="#3a3d42">${[...Array(12)].map((_,i)=>`<rect x="-4" y="-36" width="8" height="12" rx="2" transform="rotate(${i*30})"/>`).join('')}<circle r="27"/></g><circle cx="50" cy="50" r="20" fill="#d6d8dc"/><circle cx="50" cy="50" r="9" fill="#3a3d42"/></svg>`,
+  weather:`<svg viewBox="0 0 100 100"><defs><linearGradient id="weg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E7AE0"/><stop offset="1" stop-color="#59B6F5"/></linearGradient></defs><rect width="100" height="100" fill="url(#weg)"/><circle cx="40" cy="40" r="16" fill="#FFD23F"/><path d="M35 72h36a12 12 0 0 0 0-24 16 16 0 0 0-30 4 10 10 0 0 0-6 20z" fill="#fff"/></svg>`,
+  clock:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/><circle cx="50" cy="50" r="38" fill="#fff"/>${[...Array(12)].map((_,i)=>`<rect x="49" y="15" width="2" height="5" fill="#000" transform="rotate(${i*30} 50 50)"/>`).join('')}<rect x="48.5" y="28" width="3" height="23" rx="1.5" fill="#000" transform="rotate(-60 50 50)"/><rect x="49" y="20" width="2" height="31" rx="1" fill="#000" transform="rotate(40 50 50)"/><rect x="49.5" y="18" width="1" height="38" fill="#FF9500" transform="rotate(160 50 50)"/><circle cx="50" cy="50" r="3" fill="#FF9500"/></svg>`,
+  camera:`<svg viewBox="0 0 100 100"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3e4e6"/><stop offset="1" stop-color="#b6b8bc"/></linearGradient></defs><rect width="100" height="100" fill="url(#cg)"/><rect x="16" y="32" width="68" height="44" rx="8" fill="#3a3a3c"/><path d="M38 32l5-8h14l5 8z" fill="#3a3a3c"/><circle cx="50" cy="54" r="15" fill="#c8c9cc"/><circle cx="50" cy="54" r="10" fill="#3a3a3c"/><circle cx="73" cy="40" r="2.5" fill="#FFD23F"/></svg>`,
+};
+
+const APPS = [
+  {id:"serve",  name:"سيرف"},
+  {id:"game",   name:CONFIG.gameName},
+  {id:"tiktok", name:"تيك توك"},
+  {id:"photos", name:"الصور"},
+  {id:"notes",  name:"الملاحظات"},
+  {id:"files",  name:"الملفات"},
+  {id:"calendar",name:"التقويم"},
+  {id:"settings",name:"الإعدادات"},
+  {id:"weather",name:"الطقس"},
+  {id:"clock",  name:"الساعة"},
+];
+const DOCK = [
+  {id:"phone",   name:"الهاتف"},
+  {id:"whatsapp",name:"واتساب"},
+  {id:"messages",name:"الرسائل"},
+  {id:"camera",  name:"الكاميرا"},
+];
+const BADGES = {phone:11, whatsapp:38, messages:3, serve:1};
+
+/* =====================================================================
+   الصور (الاستديو)
+   ===================================================================== */
+const PHOTOS = [20,19,16,15,12,14,6,8,1,9,10,13,7,2,5,3,11,4].map(n=>({full:S(`p${n}.jpg`),thumb:S(`t${n}.jpg`),n}));
+const IMG = n => S(`p${n}.jpg`);
+
+/* =====================================================================
+   المحادثات (واتساب)  – me:1 = رسالة من صاحب الجوال
+   img: رقم صورة من الاستديو  |  src: اسم صورة ثانية
+   ===================================================================== */
+const N = CONFIG.ownerName;
+const H = CONFIG.heater;
+const CHATS = [
+  {id:"mom", name:"أمي ❤️", av:"👵", color:"#e8a0b4", time:"10:52 ص", unread:8, msgs:[
+    {day:"أمس"},
+    {t:"يمه وش فيه السخان؟", me:1, tm:"8:14 م"},
+    {t:"من أمس الموية باردة ثلج 🥶", tm:"8:20 م"},
+    {t:"توضيت الفجر بموية باردة", tm:"8:20 م"},
+    {t:"طيب يمه بكرة أكلم فني من سيرف", me:1, tm:"8:31 م"},
+    {t:"انت شغلك كله فنيين وسخان أمك خربان 😒", tm:"8:33 م"},
+    {day:"اليوم"},
+    {t:N, tm:"10:40 ص"},
+    {t:N+"ن", tm:"10:40 ص"},
+    {t:"ليش ما ترد", tm:"10:41 ص"},
+    {t:"اتصلت عليك ٦ مرات", tm:"10:44 ص"},
+    {t:"خالاتك جايين بكرة العصر وما فيه موية حارة", tm:"10:49 ص"},
+    {t:"كلمت الفني ولا لا؟", tm:"10:50 ص"},
+    {t:"ولا تنسى الخبز 🫓", tm:"10:52 ص"},
+  ]},
+  {id:"mkt", name:"قروب التسويق 📣", av:"📣", color:"#14968A", time:"10:47 ص", unread:12, group:1, msgs:[
+    {sys:"شهد أنشأت المجموعة \"قروب التسويق 📣\""},
+    {day:"اليوم"},
+    {who:"شهد – التسويق", wc:"#d35400", t:"صباح الخير يا جماعة ☀️ اليوم ننزل حملة السخانات", tm:"8:05 ص"},
+    {who:"ريم – تصميم", wc:"#8e44ad", t:"التصميم جاهز 👇", tm:"8:31 ص"},
+    {who:"ريم – تصميم", wc:"#8e44ad", src:"sv_banner.jpg", tm:"8:31 ص"},
+    {who:"شهد – التسويق", wc:"#d35400", t:`حلو 👌 العرض:\nتنظيف السخان العادي ${H.normal} ﷼ بدل ${H.normalOld}\nتنظيف السخان المخفي ${H.hidden} ﷼ بدل ${H.hiddenOld}`, tm:"8:40 ص"},
+    {who:"شهد – التسويق", wc:"#d35400", t:`وكود الحملة: ${CONFIG.marketingCode}\nخصم ${CONFIG.codesPercent} 🔥 لا أحد ينشره قبل الساعة ٤`, tm:"8:41 ص"},
+    {t:"تمام 👍 وفيديو قبل وبعد للترسبات متى نصوره؟", me:1, tm:"9:02 ص"},
+    {who:"ريم – تصميم", wc:"#8e44ad", t:"بكرة عند عميل الياسمين إن شاء الله", tm:"9:05 ص"},
+    {who:"ريم – تصميم", wc:"#8e44ad", img:20, t:"شوفوا اللي طلع من سخان أمس 😳", tm:"9:40 ص"},
+    {who:"شهد – التسويق", wc:"#d35400", t:"ننزلها مع فيديو قبل وبعد 👌", tm:"9:41 ص"},
+    {who:"شهد – التسويق", wc:"#d35400", t:N+" لا تنسى أرقام التقرير ابيها للبوست", tm:"10:30 ص"},
+    {who:"ريم – تصميم", wc:"#8e44ad", t:"شكله نايم 😂", tm:"10:47 ص"},
+  ]},
+  {id:"boss", name:"أبو خالد – المشرف", av:"👨🏻‍💼", color:"#7f8c8d", time:"10:38 ص", unread:2, msgs:[
+    {day:"أمس"},
+    {t:"التقرير جاهز؟", tm:"6:10 م"},
+    {t:"ايه خلصته 👍 حطيته بالملفات", me:1, tm:"6:25 م"},
+    {t:`وكود خصم ${CONFIG.secretPercent} اللي سويناه لا تعطيه أحد، خله بالملف السري`, tm:"6:30 م"},
+    {t:"أبشر حطيته بالملف السري وقفلته 🤐", me:1, tm:"6:31 م"},
+    {t:"بأي رقم؟", tm:"6:31 م"},
+    {t:"بالرقم اللي تعرفه… إجمالي سبتمبر 😂", me:1, tm:"6:32 م"},
+    {t:"وانا وش دراني عن مصاريفك 😂", tm:"6:33 م"},
+    {day:"اليوم"},
+    {t:"ابي أرقام التقرير قبل ١٢", tm:"10:37 ص"},
+    {t:"ورد على جوالك", tm:"10:38 ص"},
+  ]},
+  {id:"tech", name:"أبو عمر – فني سباكة", av:"🧑🏽‍🔧", color:"#27ae60", time:"10:15 ص", unread:3, msgs:[
+    {day:"اليوم"},
+    {t:"السلام عليكم", tm:"9:58 ص"},
+    {t:"وصلت عند العميل 👍", tm:"9:58 ص"},
+    {img:19, t:"السخان مليان ترسبات 😳", tm:"10:04 ص"},
+    {t:"العميل يسأل فيه خصم؟", tm:"10:06 ص"},
+    {t:`عطه كود ${CONFIG.techCode} خصم ${CONFIG.codesPercent} 👍`, me:1, tm:"10:07 ص"},
+    {t:"تمام عطيته 👍", tm:"10:09 ص"},
+    {img:9, t:"خلصت التنظيف والموية صارت حارة 🔥", tm:"10:15 ص"},
+  ]},
+  {id:"client", name:"عميل – حي الياسمين", av:"👤", color:"#95a5a6", time:"11:20 ص", unread:0, msgs:[
+    {day:"اليوم"},
+    {t:"السلام عليكم، السخان صار يطلع موية فاترة وفيه صوت طقطقة", tm:"9:12 ص"},
+    {t:`وعليكم السلام 🌷 غالباً ترسبات، ننصحك بتنظيف السخان. العرض الحين: العادي بـ ${H.normal} ﷼ بدل ${H.normalOld}`, me:1, tm:"9:15 ص"},
+    {t:"ممتاز 👍 أول مرة أطلب من التطبيق", tm:"9:16 ص"},
+    {t:"حياك الله، وأول طلب لك فيه كاش باك 10% 🎁", me:1, tm:"9:17 ص"},
+    {t:"ما شاء الله 😍 طلبت الحين", tm:"9:20 ص"},
+    {t:"الفني خلص، الموية صارت حارة والطقطقة راحت 👌", tm:"11:02 ص"},
+    {t:"وجاني الكاش باك بعد 😄 جزاكم الله خير", tm:"11:05 ص"},
+    {t:"الله يعافيك 🙏 لا تنسى تقيّمنا ⭐", me:1, tm:"11:20 ص"},
+  ]},
+  {id:"sis", name:"رنيم أختي 🦋", av:"👧🏻", color:"#f39c12", time:"9:12 ص", unread:4, msgs:[
+    {day:"اليوم"},
+    {t:N, tm:"8:55 ص"},
+    {t:"أمي تقول صلّح السخان اليوم 😤", tm:"8:55 ص"},
+    {t:"الضيوف بكرة بيجون والموية باردة", tm:"8:56 ص"},
+    {t:"إن شاء الله اليوم أكلم الفني", me:1, tm:"9:03 ص"},
+    {t:"إن شاء الله حقتك نعرفها 😒", tm:"9:04 ص"},
+    {t:"أمي تقول إذا ما صلحته بتطلبه هي من التطبيق 😂", tm:"9:10 ص"},
+    {t:"خليها تطلب وأنا أعطيها كود 😂", me:1, tm:"9:11 ص"},
+    {t:"أي كود؟ عطني إياه 👀", tm:"9:12 ص"},
+  ]},
+  {id:"shabab", name:"الشباب ♠️", av:"♠️", color:"#2c3e50", time:"أمس", unread:5, group:1, msgs:[
+    {day:"أمس"},
+    {who:"فهد", wc:"#2980b9", t:"الليلة بلوت عندي 🔥", tm:"8:12 م"},
+    {who:"عبدالله", wc:"#16a085", t:"حاضر", tm:"8:13 م"},
+    {who:"فهد", wc:"#2980b9", t:N+" لا تعتذر مثل كل مرة", tm:"8:14 م"},
+    {t:"عندي شغل لين ٩", me:1, tm:"8:30 م"},
+    {who:"فهد", wc:"#2980b9", t:"خلاص ٩ ونص", tm:"8:31 م"},
+    {who:"عبدالله", wc:"#16a085", t:"وجيب معك فني لسخان فهد 😂 من صرت بسيرف وكل سخاناتنا خربانة", tm:"8:31 م"},
+    {who:"فهد", wc:"#2980b9", t:"😂😂😂 صادق", tm:"8:32 م"},
+    {t:"حمّلوا التطبيق واطلبوا مثل الناس 😂", me:1, tm:"8:35 م"},
+    {who:"فهد", wc:"#2980b9", t:"وين وصلت؟", tm:"9:47 م"},
+    {who:"فهد", wc:"#2980b9", t:"خلاص كالعادة 🙂", tm:"10:30 م"},
+  ]},
+  {id:"raju", name:"راجو – كهرباء", av:"👷🏾", color:"#8e44ad", time:"أمس", unread:0, msgs:[
+    {day:"أمس"},
+    {t:"sir tomorrow location send please", tm:"5:40 م"},
+    {t:"ok راجو بكرة أرسلها لك الصبح", me:1, tm:"5:52 م"},
+    {t:"👍 thank you sir", tm:"5:52 م"},
+    {img:3, t:"socket ok now", tm:"6:20 م"},
+    {t:"كفو 👏", me:1, tm:"6:21 م"},
+  ]},
+];
+
+/* =====================================================================
+   الرسائل النصية
+   ===================================================================== */
+const SMS = [
+  {from:"البنك", time:"8:00 ص", items:[
+    {d:"اليوم 7:31 ص", t:"شراء عبر نقاط البيع\nمبلغ: 100.00 ر.س\nلدى: محطة بنزين"},
+    {d:"اليوم 8:00 ص", t:"شراء عبر نقاط البيع\nمبلغ: 10.00 ر.س\nلدى: بوفية (كرك وشباتي)"},
+  ]},
+  {from:"رمز التحقق", time:"9:02 ص", items:[
+    {d:"اليوم 9:02 ص", t:"رمز التحقق الخاص بك: 7392\nلا تشاركه مع أي شخص."},
+  ]},
+  {from:"فاتورة الجوال", time:"الأحد", items:[
+    {d:"الأحد 12:00 م", t:"عميلنا العزيز، فاتورتك بمبلغ 230.00 ر.س مستحقة السداد. تجاهل الرسالة إذا تم السداد."},
+  ]},
+  {from:"التوصيل", time:"السبت", items:[
+    {d:"السبت 1:12 م", t:"طلبك في الطريق 🛵 المندوب بيوصلك خلال 25 دقيقة."},
+    {d:"السبت 1:58 م", t:"المندوب وصل ويحاول يتصل عليك 📞"},
+  ]},
+];
+
+/* =====================================================================
+   الملاحظات  –  رمز الملفات = "الإجمالي" في مصاريف سبتمبر
+   ===================================================================== */
+const NOTES = [
+  {title:"لازم أسويها ✅", date:"اليوم 7:05 ص", body:
+`☐ أخلص التقرير وأرسله لأبو خالد
+☐ أكلم فني سيرف يصلح سخان البيت 🔥
+☐ أجيب أغراض البيت: خبز، حليب، رز، مناديل`},
+  {title:"مصاريف سبتمبر 🧾", date:"30 سبتمبر", body:
+`إيجار: 3500
+بنزين: 450
+فواتير (كهرباء + جوال): 600
+أغراض البيت: 1800
+قسط السيارة: 1336
+————————
+الإجمالي: ${CONFIG.filesPin}`},
+  {title:"أفكار محتوى تيك توك 🎬", date:"الأحد", body:
+`- أضرار الترسبات في السخان (موية فاترة + صوت طقطقة)
+- تصوير قبل وبعد تنظيف السخان
+- وش يطلع من السخان بعد سنة بدون تنظيف؟ 😳
+- متى لازم تنظف سخانك؟
+- الفرق بين تنظيف السخان العادي والمخفي
+حساب سيرف: ${CONFIG.tiktokHandle}`},
+];
+
+/* =====================================================================
+   سجل المكالمات
+   ===================================================================== */
+const RECENTS = [
+  {n:"أمي ❤️", miss:1, c:6, sub:"جوال", t:"10:44 ص"},
+  {n:"أبو خالد – المشرف", miss:1, c:3, sub:"جوال", t:"10:38 ص"},
+  {n:"أبو عمر – فني سباكة", sub:"جوال", t:"9:57 ص"},
+  {n:"عميل – حي الياسمين", sub:"جوال", t:"9:14 ص"},
+  {n:"رنيم أختي 🦋", miss:1, c:2, sub:"جوال", t:"8:57 ص"},
+  {n:"رقم غير معروف", miss:1, sub:"غير معروف", t:"8:20 ص"},
+  {n:"فهد", miss:1, c:4, sub:"جوال", t:"أمس"},
+  {n:"راجو – كهرباء", sub:"جوال", t:"أمس"},
+  {n:"أمي ❤️", sub:"جوال", t:"أمس"},
+];
+</script>
+
+<script>
+/* =====================================================================
+   المحرك – ما تحتاج تعدل تحت
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = s => esc(s).replace(/\n/g,"<br>");
+const store = {
+  get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ---------- الوقت ---------- */
+function clock(){
+  const d=new Date();
+  let h=d.getHours()%12||12, m=String(d.getMinutes()).padStart(2,"0");
+  $("#sbtime").textContent=`${h}:${m}`; $("#lkTime").textContent=`${h}:${m}`;
+  const day=new Intl.DateTimeFormat("ar-SA-u-ca-gregory-nu-latn",{weekday:"long"}).format(d);
+  const date=new Intl.DateTimeFormat("ar-SA-u-ca-gregory-nu-latn",{weekday:"long",day:"numeric",month:"long"}).format(d);
+  $("#lkDate").textContent=date;
+  $("#wdDay").textContent=day; $("#wdNum").textContent=d.getDate();
+  document.querySelectorAll("#calIcoDay").forEach(e=>e.textContent=day);
+  document.querySelectorAll("#calIcoNum").forEach(e=>e.textContent=d.getDate());
+}
+
+/* ---------- الشاشة الرئيسية ---------- */
+function appEl(a){
+  const b=BADGES[a.id]||"";
+  if(a.id==="tiktok") return `<a class="app" href="${CONFIG.tiktok}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="badge" id="b-${a.id}">${b}</div><div class="ico">${ICONS[a.id]}</div><span>${a.name}</span></a>`;
+  return `<div class="app" onclick="openApp('${a.id}')"><div class="badge" id="b-${a.id}">${b}</div><div class="ico">${ICONS[a.id]}</div><span>${a.name}</span></div>`;
+}
+function buildHome(){
+  $("#grid").innerHTML=APPS.map(appEl).join("");
+  $("#dock").innerHTML=DOCK.map(appEl).join("");
+}
+function setBadge(id,v){BADGES[id]=v;const e=$("#b-"+id);if(e)e.textContent=v||""}
+
+/* ---------- القفل ---------- */
+function buildLock(){
+  const items=[
+    {ic:"whatsapp",a:"واتساب",t:"الآن",p:"أمي ❤️: ولا تنسى الخبز 🫓  (+37 رسالة)"},
+    {ic:"phone",a:"مكالمات فائتة",t:"قبل 9 د",p:"أمي ❤️ (6) · أبو خالد – المشرف (3) · رنيم (2)"},
+    {ic:"serve",a:"سيرف",t:"قبل 25 د",p:`عرض تنظيف السخان 🔥 العادي بـ ${H.normal} ﷼ بدل ${H.normalOld}`},
+  ];
+  $("#lkNotifs").innerHTML=items.map(n=>`<div class="ln"><div class="ic">${ICONS[n.ic]}</div><div class="tx"><div class="tt">${n.a}<small>${n.t}</small></div><p>${esc(n.p)}</p></div></div>`).join("");
+  const lock=$("#lock"); let y0=null;
+  const start=e=>{y0=(e.touches?e.touches[0]:e).clientY};
+  const move=e=>{if(y0==null)return;const dy=(e.touches?e.touches[0]:e).clientY-y0;if(dy<0)lock.style.transform=`translateY(${dy}px)`};
+  const end=e=>{if(y0==null)return;const y=(e.changedTouches?e.changedTouches[0]:e).clientY;const dy=y-y0;y0=null;lock.style.transform="";
+    if(dy<-60||Math.abs(dy)<8)unlock();};
+  lock.addEventListener("touchstart",start,{passive:true});lock.addEventListener("touchmove",move,{passive:true});lock.addEventListener("touchend",end);
+  lock.addEventListener("mousedown",start);lock.addEventListener("mousemove",move);lock.addEventListener("mouseup",end);
+}
+let unlocked=false;
+function unlock(){
+  if(unlocked)return; unlocked=true;
+  $("#lock").classList.add("gone");
+  startStory();
+}
+
+/* ---------- فتح/إغلاق التطبيقات ---------- */
+let stack=[], current=null;
+const LIGHT_APPS=["game","serve-dark"];
+function openApp(id){
+  if(id==="tiktok"){ toast("جاري فتح حساب سيرف على تيك توك…"); setTimeout(()=>window.open(CONFIG.tiktok,"_blank","noopener"),400); return }
+  if(id==="camera"){ toast("📷 الكاميرا مغطاة بشريط عازل 😂"); return }
+  if(id==="clock"){ toast("⏰ منبه 5:30 ص – صلاة ثم اجتماع الفنيين"); return }
+  if(id==="weather"){ toast("🌤️ الرياض 38°"); return }
+  const app=$("#app"); app.innerHTML=""; stack=[]; current=id;
+  const r=APP_RENDER[id]; if(!r)return;
+  push(r(), true);
+  app.classList.add("open");
+  $("#sb").classList.toggle("dark", !(id==="game"||id==="serve"));
+  $("#homebar").classList.toggle("dark", id!=="game");
+  if(BADGES[id] && id!=="serve"){} // تبقى الشارات طبيعية
+}
+function goHome(){
+  if(!unlocked){unlock();return}
+  $("#app").classList.remove("open"); current=null; Game.stop();
+  $("#sb").classList.remove("dark"); $("#homebar").classList.remove("dark");
+}
+function push(html, first){
+  const v=document.createElement("div"); v.className="view"+(first?"":" enter"); v.innerHTML=html;
+  const prev=stack[stack.length-1];
+  $("#app").appendChild(v); stack.push(v);
+  if(!first){ requestAnimationFrame(()=>requestAnimationFrame(()=>{v.classList.remove("enter"); prev&&prev.classList.add("under")})) }
+  return v;
+}
+function pop(){
+  if(stack.length<2){goHome();return}
+  const v=stack.pop(); const prev=stack[stack.length-1];
+  v.classList.add("enter"); prev.classList.remove("under");
+  setTimeout(()=>v.remove(),320);
+}
+function nav(title,{back="",large=false,cls=""}={}){
+  return `<div class="nav ${cls}"><div class="row">${back?`<button class="back" onclick="pop()">‹ ${back}</button>`:`<span></span>`}${large?"":`<div class="ttl">${title}</div>`}<span></span></div>${large?`<h1>${title}</h1>`:""}</div>`;
+}
+
+/* ---------- توست ---------- */
+let tT; function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(tT);tT=setTimeout(()=>e.classList.remove("show"),2400)}
+
+/* ---------- إشعار ---------- */
+let bT;
+function notify(icon,title,text,onTap){
+  const b=$("#banner"); b.querySelector(".ic").innerHTML=ICONS[icon];
+  b.querySelector(".tt span").textContent=title; b.querySelector("p").textContent=text;
+  b.onclick=()=>{b.classList.remove("show"); onTap&&onTap()};
+  b.classList.add("show"); try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}
+  clearTimeout(bT); bT=setTimeout(()=>b.classList.remove("show"),4800);
+}
+
+/* =====================================================================
+   التطبيقات
+   ===================================================================== */
+const APP_RENDER = {
+
+/* ---------- الصور ---------- */
+photos(){
+  return nav("الصور",{large:true})+`<div class="body" style="background:#fff">
+    <div style="padding:0 16px 10px;color:#8e8e93;font-size:14px">${PHOTOS.length} صورة</div>
+    <div class="pgrid">${PHOTOS.map((p,i)=>`<div style="background-image:url(${p.thumb})" onclick="viewPhoto(${i})"></div>`).join("")}</div></div>`;
+},
+
+/* ---------- واتساب ---------- */
+whatsapp(){
+  return `<div class="nav"><div class="row"><span style="color:var(--blue);font-size:17px">تعديل</span><span></span><span style="font-size:20px;color:var(--blue)">📷 ✎</span></div><h1>الدردشات</h1></div>
+  <div class="body" style="background:#fff">
+    <div style="margin:8px 16px;background:#eeeef0;border-radius:10px;padding:8px 10px;color:#8e8e93;font-size:15px">🔍 بحث</div>
+    <div class="wa-list">${CHATS.map(c=>`<div class="li" onclick="openChat('${c.id}')">
+      <div class="av" style="background:${c.color}">${c.av}</div>
+      <div class="wa-meta"><div class="t"><b>${esc(c.name)}</b><small class="${c.unread?"u":""}">${c.time}</small></div>
+      <p><span style="overflow:hidden;text-overflow:ellipsis">${esc(lastText(c))}</span>${c.unread?`<span class="cnt">${c.unread}</span>`:""}</p></div></div>`).join("")}</div>
+  </div>
+  <div class="tabbar"><button><i>🔄</i>المستجدات</button><button><i>📞</i>المكالمات</button><button><i>👥</i>المجتمعات</button><button class="on"><i>💬</i>الدردشات</button><button><i>⚙️</i>الإعدادات</button></div>`;
+},
+
+/* ---------- الرسائل ---------- */
+messages(){
+  return nav("الرسائل",{large:true})+`<div class="body" style="background:#fff"><div class="wa-list">${SMS.map((s,i)=>`<div class="li" onclick="openSms(${i})">
+    <div class="av" style="background:linear-gradient(#a4a9b0,#7d838c);width:44px;height:44px;font-size:18px">${esc(s.from[0])}</div>
+    <div class="wa-meta"><div class="t"><b>${esc(s.from)}</b><small>${s.time} ›</small></div><p>${esc(s.items[s.items.length-1].t.split("\n")[0])}</p></div></div>`).join("")}</div></div>`;
+},
+
+/* ---------- الملاحظات ---------- */
+notes(){
+  return nav("الملاحظات",{large:true,cls:"notes-nav"})+`<div class="body">
+    <div class="list">${NOTES.map((n,i)=>`<div class="li" onclick="openNote(${i})" style="flex-direction:column;align-items:stretch;gap:2px">
+      <b style="font-size:16px">${esc(n.title)}</b><small style="color:#8e8e93;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n.date}  ${esc(n.body.split("\n")[0])}</small></div>`).join("")}</div>
+    <div style="text-align:center;color:#8e8e93;font-size:12px">${NOTES.length} ملاحظات</div></div>`;
+},
+
+/* ---------- الملفات ---------- */
+files(){ return filesInside() },
+
+/* ---------- الهاتف ---------- */
+phone(){
+  return `<div class="nav"><div class="row"><span style="color:var(--blue);font-size:17px">تعديل</span><div class="ttl" style="position:static"><div class="seg" style="margin:0"><button class="on">الكل</button><button>الفائتة</button></div></div><span style="width:40px"></span></div><h1>الأحدث</h1></div>
+  <div class="body" style="background:#fff"><div class="wa-list">${RECENTS.map(r=>`<div class="li" onclick="fakeCall('${esc(r.n)}')">
+    <div class="rc"><b class="${r.miss?"miss":""}">${esc(r.n)}${r.c?` (${r.c})`:""}</b><small>📞 ${r.sub}</small></div><span class="rtime">${r.t}</span><span style="color:var(--blue);font-size:20px">ⓘ</span></div>`).join("")}</div></div>
+  <div class="tabbar"><button><i>⭐</i>المفضلة</button><button class="on"><i>🕘</i>الأحدث</button><button><i>👤</i>جهات الاتصال</button><button><i>⌨️</i>لوحة المفاتيح</button><button><i>📼</i>البريد الصوتي</button></div>`;
+},
+
+/* ---------- التقويم ---------- */
+calendar(){
+  const d=new Date(); const dow=d.getDay();
+  const days=["أحد","إثنين","ثلاثاء","أربعاء","خميس","جمعة","سبت"];
+  const week=[...Array(7)].map((_,i)=>{const x=new Date(d);x.setDate(d.getDate()-dow+i);return `<div class="${i===dow?"on":""}">${days[i]}<b>${x.getDate()}</b></div>`}).join("");
+  const ev=[
+    ["7:45 ص","اجتماع الصباح","المكتب"],
+    ["10:00 ص","متابعة حملة السخانات 📣","مع شهد وريم"],
+    ["12:00 م","‼️ تسليم التقرير لأبو خالد","(في الملفات)"],
+    ["1:30 م","أكلم فني لسخان البيت 🔥","قبل لا تزعل أمي"],
+    ["4:00 م","تصوير تيك توك: قبل وبعد تنظيف السخان 🎬","حي الياسمين"],
+    ["9:30 م","بلوت عند فهد ♠️","لا تعتذر هالمرة"],
+  ];
+  return nav("التقويم",{large:true})+`<div class="calhead">${week}</div><div class="body">${ev.map(e=>`<div class="ev"><div class="et">${e[0]}</div><div class="eb"><b>${e[1]}</b><small>${e[2]}</small></div></div>`).join("")}</div>`;
+},
+
+/* ---------- الإعدادات ---------- */
+settings(){
+  const row=(c,i,t,v="")=>`<div class="li"><div class="sic" style="background:${c}">${i}</div><div class="lt">${t}</div><span class="rv">${v}</span><span class="chev">‹</span></div>`;
+  return nav("الإعدادات",{large:true})+`<div class="body">
+    <div class="list"><div class="li prof"><div class="av" style="background:var(--teal)">${N[0]}</div><div><b style="font-size:20px">${N}</b><div style="color:#8e8e93;font-size:13px">موظف عمليات – سيرف 🛠️</div></div></div></div>
+    <div class="list">${row("#FF9500","✈️","وضع الطيران")}${row("#007AFF","📶","Wi-Fi","Serve_Office")}${row("#007AFF","ᛒ","البلوتوث","تشغيل")}${row("#34C759","📡","الخلوي")}</div>
+    <div class="list">${row("#FF3B30","🔔","الإشعارات","43")}${row("#5856D6","🌙","التركيز","إيقاف")}${row("#34C759","🔋","البطارية","9% 🪫")}</div>
+    <div class="list">${row("#8E8E93","ℹ️","عن الجهاز",`آيفون ${N}`)}${row("#8E8E93","🔒","الخصوصية")}</div>
+  </div>`;
+},
+
+/* ---------- سيرف ---------- */
+serve(){ setBadge("serve",0); setTimeout(()=>stack[0]&&stack[0].classList.add("sva"),0); return serveView("home") },
+
+/* ---------- اللعبة ---------- */
+game(){ return `<div class="hz" id="gm"><div class="wrap" id="hzwrap"></div></div>` },
+};
+
+/* ---------- مساعدات واتساب ---------- */
+function lastText(c){const m=[...c.msgs].reverse().find(m=>m.t||m.voice||m.img||m.src);if(!m)return"";const p=(c.group&&m.who?m.who.split(" ")[0]+": ":"")+(m.me?"أنت: ":"");return p+(m.voice?"🎤 رسالة صوتية":m.t||"📷 صورة")}
+function openChat(id){
+  const c=CHATS.find(x=>x.id===id); c.unread=0;
+  const tot=CHATS.reduce((a,x)=>a+x.unread,0); setBadge("whatsapp",tot);
+  const body=c.msgs.map(m=>{
+    if(m.day) return `<div class="cday"><span>${m.day}</span></div>`;
+    if(m.sys) return `<div class="sysmsg"><span>${esc(m.sys)}</span></div>`;
+    let inner="";
+    if(m.who) inner+=`<span class="who" style="color:${m.wc||"#06cf9c"}">${esc(m.who)}</span>`;
+    if(m.img) inner+=`<img src="${S('t'+m.img+'.jpg')}" onclick="viewPhotoN(${m.img})">`;
+    if(m.src) inner+=`<img src="${S(m.src)}" onclick="viewSrc('${m.src}')">`;
+    if(m.voice) inner+=`<div class="voice"><span class="pl"></span><span class="wv"></span><small>${m.voice}</small></div>`;
+    if(m.t) inner+=fmt(m.t);
+    inner+=`<span class="tm">${m.tm}</span>`;
+    return `<div class="msg ${m.me?"out":"in"}">${inner}</div>`;
+  }).join("")+`<div class="clear"></div>`;
+  const v=push(`<div class="nav" style="padding-bottom:10px"><div class="row"><button class="back" onclick="pop();refreshWA()">‹</button>
+      <div style="flex:1;display:flex;align-items:center;gap:8px;margin-right:6px"><div class="av" style="width:36px;height:36px;font-size:17px;background:${c.color}">${c.av}</div><div><b style="font-size:16px">${esc(c.name)}</b><div style="font-size:12px;color:#8e8e93">${c.group?"اضغط لمعلومات المجموعة":"آخر ظهور اليوم"}</div></div></div>
+      <span style="color:var(--blue);font-size:19px">📹&nbsp; 📞</span></div></div>
+    <div class="body chat">${body}</div>
+    <div class="composer"><i>＋</i><div>رسالة</div><i>🎤</i></div>`);
+  const b=v.querySelector(".body"); setTimeout(()=>b.scrollTop=b.scrollHeight,10);
+}
+function refreshWA(){ if(current==="whatsapp"){const v=stack[0];setTimeout(()=>{v.innerHTML=APP_RENDER.whatsapp()},330)} }
+
+function openSms(i){
+  const s=SMS[i];
+  const v=push(nav(s.from,{back:"الرسائل"})+`<div class="body" style="background:#fff"><div class="sms">${s.items.map(m=>`<div class="tsm">${m.d}</div><div class="b">${fmt(m.t)}</div>`).join("")}<div class="clear"></div></div></div>`);
+}
+function openNote(i){
+  const n=NOTES[i];
+  push(`<div class="nav notes-nav" style="background:#fff;border:0"><div class="row"><button class="back" style="color:#E0A800" onclick="pop()">‹ الملاحظات</button><span style="color:#E0A800;font-size:20px">⋯</span></div></div>
+    <div class="note-body"><div class="nd">${n.date}</div><h2>${esc(n.title)}</h2>${esc(n.body)}</div>`);
+}
+
+/* ---------- عارض الصور ---------- */
+let vi=0;
+let vlist=PHOTOS;
+function viewPhoto(i,list){
+  vlist=list||PHOTOS; vi=i; const single=vlist.length<2; const v=push(`<div id="viewer"><div class="top"><button onclick="pop()">‹ ${single?"رجوع":"الكل"}</button><span id="vc"></span><span style="width:40px"></span></div>
+  <div class="img" id="vimg"><img id="vpic"></div><div class="arrows"><button onclick="stepPhoto(1)" style="visibility:${single?"hidden":"visible"}">‹</button><span style="font-size:22px">${single?"↗︎":"♡ &nbsp; ⓘ &nbsp; 🗑"}</span><button onclick="stepPhoto(-1)" style="visibility:${single?"hidden":"visible"}">›</button></div></div>`);
+  showPhoto();
+  let x0=null; const el=v.querySelector("#vimg");
+  el.addEventListener("touchstart",e=>x0=e.touches[0].clientX,{passive:true});
+  el.addEventListener("touchend",e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>40)stepPhoto(dx>0?1:-1)});
+}
+function viewPhotoN(n){viewPhoto(0,[{full:S(`p${n}.jpg`)}])}
+function viewSrc(name){viewPhoto(0,[{full:S(name)}])}
+function stepPhoto(d){if(vlist.length<2)return;vi=(vi+d+vlist.length)%vlist.length;showPhoto()}
+function showPhoto(){const p=vlist[vi];$("#vpic").src=p.full;$("#vc").textContent=vlist.length<2?"":`${vi+1} من ${vlist.length}`}
+
+/* ---------- قفل الملفات ---------- */
+let pin="", tries=0;
+function secretPinView(){
+  pin=""; tries=0;
+  return nav("سري_لا_تفتحه 🔒",{back:"الملفات"})+`<div class="pin">
+    <div class="lock-ic">🔐</div><h3>الملف مقفل</h3><p id="pinMsg">أدخل رمز الملف</p>
+    <div class="dots" id="dots">${"<i></i>".repeat(CONFIG.filesPin.length)}</div>
+    <div class="keys">${[1,2,3,4,5,6,7,8,9].map(k=>`<button onclick="pinKey('${k}')">${k}</button>`).join("")}<button class="x" onclick="toast('تلميح: الرمز مكتوب في الملاحظات… بس مو على إنه رمز 😉')">نسيت؟</button><button onclick="pinKey('0')">0</button><button class="x" onclick="pinDel()">حذف</button></div>
+  </div>`;
+}
+function pinKey(k){
+  if(pin.length>=CONFIG.filesPin.length)return; pin+=k; drawDots();
+  if(pin.length===CONFIG.filesPin.length){
+    setTimeout(()=>{
+      if(pin===CONFIG.filesPin){ store.set("secretOpen",true); stack[stack.length-1].innerHTML=secretHTML(); confetti(); toast("🔓 فتحت الملف السري!") }
+      else{ tries++; const d=$("#dots"); d.classList.add("shake"); setTimeout(()=>d.classList.remove("shake"),400); pin=""; drawDots();
+        $("#pinMsg").textContent = tries>=5?"تلميح: شيك مصاريف شهر 9… آخر رقم 🧾": tries>=3?"تلميح: ارجع للملاحظات 📝":"رمز غير صحيح، حاول مرة ثانية"; }
+    },150);
+  }
+}
+function pinDel(){pin=pin.slice(0,-1);drawDots()}
+function drawDots(){document.querySelectorAll("#dots i").forEach((d,i)=>d.classList.toggle("f",i<pin.length))}
+const FILE_ICON=(c,ext)=>`<svg class="fi" viewBox="0 0 72 88"><path d="M4 0h46l18 18v66a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" fill="#fff" stroke="#ddd"/><path d="M50 0v14a4 4 0 0 0 4 4h14" fill="#eee" stroke="#ddd"/><rect x="8" y="58" width="56" height="20" rx="4" fill="${c}"/><text x="36" y="72.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial">${ext}</text></svg>`;
+function filesInside(){
+  const files=[
+    {n:"تقرير_العمليات.pdf",c:"#E74C3C",x:"PDF",s:"238 ك.ب",f:"report"},
+    {n:"سري_لا_تفتحه 🔒.pdf",c:"#104A44",x:"PDF",s:"12 ك.ب",f:"secret"},
+  ];
+  return nav("الملفات",{large:true})+`<div class="body" style="background:#fff"><div style="padding:0 16px;color:#8e8e93;font-size:14px">📁 iCloud Drive › شغل سيرف</div>
+    <div class="fgrid">${files.map(f=>`<div class="file" onclick="openFile('${f.f}')">${FILE_ICON(f.c,f.x)}<b>${f.n}</b><small>${f.s}</small></div>`).join("")}</div></div>`;
+}
+function openFile(f){
+  if(f==="secret"){ if(!store.get("secretOpen",false)) return push(secretPinView()); confetti(); return push(secretHTML()); }
+  if(f==="report") return push(reportHTML());
+}
+function secretHTML(){ return nav("سري_لا_تفتحه 🤫.pdf",{back:"الملفات"})+`<div class="body"><div class="doc secret">
+      <div style="font-size:50px">🤫</div><h2 style="border:0;margin:6px 0 0">قلت لك لا تفتحه 😅</h2>
+      <p style="color:#555">بس دامك وصلت لهنا… هذا كود الخصم اللي ما ينعطى لأحد:</p>
+      <div class="code">${CONFIG.secretCode}</div>
+      <b style="font-size:18px;color:var(--dark)">خصم ${CONFIG.secretPercent} على طلبك من سيرف</b>
+      <div style="text-align:right;background:#f4f8f7;border-radius:12px;padding:12px 14px;margin-top:16px;line-height:1.9">
+        <b style="color:var(--dark)">📌 تحديث أسعار تنظيف السخان:</b><br>
+        • تنظيف السخان العادي صار بـ <b>${H.normal} ﷼</b> بس<br>
+        • تنظيف السخان المخفي صار بـ <b>${H.hidden} ﷼</b> بس
+      </div>
+      <button class="btn" onclick="copyCode('${CONFIG.secretCode}')">📋 انسخ الكود</button>
+      <a class="btn dark" href="${CONFIG.appStore}" target="_blank" rel="noopener">حمّل تطبيق سيرف واستخدمه</a>
+      <p style="color:#999;font-size:12px;margin-top:12px">لا تقول لأبو خالد إنك لقيته 🙏</p></div></div>`; }
+function reportHTML(){ return nav("تقرير_العمليات.pdf",{back:"الملفات"})+`<div class="body"><div class="doc"><h2>تقرير العمليات – الأسبوع الماضي</h2>
+      <table><tr><th>البند</th><th>العدد</th></tr>
+      <tr><td>طلبات مستلمة</td><td>***</td></tr><tr><td>طلبات مكتملة</td><td>***</td></tr>
+      <tr><td>تنظيف سخانات</td><td>***</td></tr><tr><td>صيانة كهرباء</td><td>***</td></tr>
+      <tr><td>متوسط وقت الوصول</td><td>خلال ساعة</td></tr><tr><td>متوسط التقييم</td><td>4.7 ⭐</td></tr></table>
+      <p><b>ملاحظات:</b><br>- طلبات السخانات زادت مع بداية البرد 🥶<br>- أكثر عطل: ترسبات وموية فاترة<br>- عرض التنظيف رفع الطلبات الجديدة</p>
+      <p style="color:#999;font-size:12px">أعدّه: ${N} – العمليات • الأرقام سرية 🔒</p></div></div>`;
+}
+function copyCode(c){try{navigator.clipboard.writeText(c);toast("✅ نسخت الكود "+c)}catch(e){toast("الكود: "+c)}}
+
+/* ---------- مكالمة وهمية من السجل ---------- */
+function fakeCall(name){
+  Call.show({name, outgoing:true, lines:["…","📵 الرقم المطلوب لا يمكن الاتصال به حالياً","(الجوال مو جوالك أصلاً 😅)"]});
+}
+
+/* =====================================================================
+   تطبيق سيرف – نسخة من واجهة التطبيق
+   ===================================================================== */
+const SVI = {
+  home:`<svg viewBox="0 0 24 24"><path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1z"/><path d="M9.5 21v-6.5h5V21"/></svg>`,
+  orders:`<svg viewBox="0 0 24 24"><path d="M12 3 2.5 8 12 13l9.5-5z"/><path d="m2.5 12 9.5 5 9.5-5"/><path d="m2.5 16 9.5 5 9.5-5"/></svg>`,
+  me:`<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.2"/><path d="M4 21c.8-4.2 4-6.5 8-6.5s7.2 2.3 8 6.5"/></svg>`,
+  edit:`<svg viewBox="0 0 24 24" fill="none" stroke="#1d2b2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5.5"/><path d="M17.5 3.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>`,
+  ac:`<svg viewBox="0 0 48 48"><rect x="4" y="10" width="40" height="18" rx="4" fill="#125C55"/><rect x="10" y="22" width="28" height="2.5" rx="1.2" fill="#fff"/><path d="M14 33v8M24 33v10M34 33v8" stroke="#14968A" stroke-width="3" stroke-linecap="round"/></svg>`,
+  elec:`<svg viewBox="0 0 48 48"><rect x="8" y="6" width="32" height="36" rx="6" fill="#125C55"/><path d="M26 12 17 26h7l-2 10 9-14h-7z" fill="#fff"/></svg>`,
+  plumb:`<svg viewBox="0 0 48 48"><path d="M8 14h20a6 6 0 0 1 6 6v6h-8v-4H8z" fill="#125C55"/><rect x="4" y="11" width="6" height="14" rx="2" fill="#125C55"/><path d="M30 32c0 3 2 5 0 8-2-3-4-5 0-8z" fill="#14968A"/></svg>`,
+};
+function serveView(tab){
+  const a = (inner, cls="") => `<a class="${cls}" href="${CONFIG.appStore}" target="_blank" rel="noopener">${inner}</a>`;
+  let body="";
+  if(tab==="home") body=`
+    <a class="sva-hero" href="${CONFIG.appStore}" target="_blank" rel="noopener"><img src="${S('sv_banner.jpg')}" alt="عرض تنظيف السخان"></a>
+    <div class="sva-loc"><svg viewBox="0 0 24 24" style="width:22px;height:22px;flex:none"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="#c3c8cc"/></svg><span>${CONFIG.location}</span>${SVI.edit}</div>
+    <h3>خدمات متنوعة</h3>
+    <div class="sva-row">
+      <a class="sva-card" href="${CONFIG.appStore}" target="_blank" rel="noopener" style="background-image:url(${S('sv_clean.jpg')})"></a>
+      ${a("<b>عقود<br>الصيانة</b><span>للأفراد والشركات</span><i>أطلب الخدمة الآن</i>","sva-card alt")}
+    </div>
+    <h3>خدمات الصيانة الفورية</h3>
+    <div class="sva-row">
+      ${[["sv_heater.png","السخانات"],["sv_fridge.png","الثلاجات"],["sv_washer.png","الغسالات"]].map(t=>a(`<div class="tb"><img src="${S(t[0])}" alt=""></div><span>${t[1]}</span>`,"sva-tile")).join("")}
+      ${[["ac","المكيفات"],["elec","الكهرباء"],["plumb","السباكة"]].map(t=>a(`<div class="tb">${SVI[t[0]]}</div><span>${t[1]}</span>`,"sva-tile")).join("")}
+    </div>`;
+  if(tab==="orders") body=`<div class="sva-top">طلباتي</div>
+    <div class="sva-ord"><div class="oi" style="background-image:url(${S('t8.jpg')})"></div><div><b>تنظيف السخان العادي</b><small>الفني في الطريق • ${H.normal} ﷼</small></div><span class="st go">قيد التنفيذ</span></div>
+    <div class="sva-ord"><div class="oi" style="background-image:url(${S('t9.jpg')})"></div><div><b>تنظيف السخان المخفي</b><small>أمس • ${H.hidden} ﷼</small></div><span class="st">مكتمل</span></div>
+    <div class="sva-ord"><div class="oi" style="background-image:url(${S('t2.jpg')})"></div><div><b>صيانة كهرباء</b><small>الأحد</small></div><span class="st">مكتمل</span></div>`;
+  if(tab==="me") body=`<div class="sva-top">الإعدادات</div>
+    <div class="sva-set">
+      <div><i>👤</i><span>${N}</span><em>‹</em></div>
+      <div><i>📍</i><span>عناويني</span><em>‹</em></div>
+      <a href="${CONFIG.tiktok}" target="_blank" rel="noopener"><i style="background:#000">${ICONS.tiktok}</i><span>تابعنا على تيك توك <small style="color:#8a9496" dir="ltr">${CONFIG.tiktokHandle}</small></span><em>‹</em></a>
+      <a href="${CONFIG.appStore}" target="_blank" rel="noopener"><i>⬇️</i><span>حمّل التطبيق</span><em>‹</em></a>
+      <div><i>🌐</i><span>اللغة</span><em>العربية ‹</em></div>
+    </div>`;
+  const tabs=`<div class="sva-tab">${[["home","الرئيسية"],["orders","طلباتي"],["me","الإعدادات"]].map(t=>`<button class="${t[0]===tab?"on":""}" onclick="svGo('${t[0]}')">${SVI[t[0]]}${t[1]}</button>`).join("")}</div>`;
+  return `<div class="body">${body}</div>${tabs}`;
+}
+function svGo(t){ stack[0].innerHTML=serveView(t); stack[0].classList.add("sva"); $("#sb").classList.toggle("dark", t!=="home") }
+
+/* =====================================================================
+   المكالمات
+   ===================================================================== */
+const Call={
+  cfg:null, timer:null, ringT:null,
+  show(cfg){
+    this.cfg=cfg; const c=$("#call");
+    c.querySelector(".nm").textContent=cfg.name;
+    c.querySelector(".st").textContent=cfg.outgoing?"جاري الاتصال…":(cfg.sub||"جوال");
+    c.querySelector(".sub").innerHTML="";
+    c.querySelector(".btns").style.display=cfg.outgoing?"none":"flex";
+    c.querySelector(".av").textContent=cfg.av||"👤";
+    c.classList.add("show"); try{navigator.vibrate&&navigator.vibrate([400,200,400])}catch(e){}
+    if(cfg.outgoing) this.play(cfg.lines,true);
+    else this.ringT=setTimeout(()=>this.decline(true),20000);
+  },
+  accept(){ clearTimeout(this.ringT); $("#call .btns").style.display="none"; this.play(this.cfg.lines) },
+  play(lines,outgoing){
+    let s=0; const st=$("#call .st"); const sub=$("#call .sub");
+    if(!outgoing){ this.timer=setInterval(()=>{s++;st.textContent=`0:${String(s).padStart(2,"0")}`},1000) }
+    lines.forEach((l,i)=>setTimeout(()=>{sub.innerHTML=`<p>${esc(l)}</p>`},i*2600+400));
+    setTimeout(()=>this.end(),lines.length*2600+1600);
+  },
+  decline(missed){
+    clearTimeout(this.ringT); const cfg=this.cfg; this.end();
+    if(cfg&&cfg.onDecline) setTimeout(cfg.onDecline,1200);
+  },
+  end(){ clearInterval(this.timer); $("#call").classList.remove("show"); const c=this.cfg; this.cfg=null; if(c&&c.after) setTimeout(c.after,1500) }
+};
+
+/* =====================================================================
+   القصة: إشعارات ومكالمات بعد فتح الجوال
+   ===================================================================== */
+const STORY=[
+  [4000, ()=>waNotify("mkt")],
+  [13000,()=>notify("serve","سيرف",`عرض تنظيف السخان 🔥 العادي بـ ${H.normal} ﷼ والمخفي بـ ${H.hidden} ﷼`,()=>openApp("serve"))],
+  [24000,()=>Call.show({name:"أمي ❤️", av:"👵", lines:[
+      N+"! وينك من الصبح؟",
+      "…مين معي؟ 🤨",
+      "لقيت جوال ولدي؟! الله يسعدك يا وليدي 🤲",
+      "قل له السخان خربان والضيوف بكرة!",
+      "والموية باردة ثلج 🥶 مع السلامة",
+    ], onDecline:()=>waNotify("mom",{t:"ترفض مكالمتي؟؟ والسخان للحين خربان 😡"})})],
+  [45000,()=>waNotify("sis")],
+  [80000,()=>Call.show({name:"رقم غير معروف", av:"❓", sub:"المملكة العربية السعودية", lines:[
+      "ألو؟ هذا جوالي! 😳",
+      "أنا "+N+"… ضاع مني بعد آخر طلب",
+      "تكفى لا تفتح الملف السري 🙏",
+      "فيه كود خصم "+CONFIG.secretPercent+" محد المفروض يشوفه 🤐",
+      "…فتحتها؟ 😩 خلاص استخدمه في تطبيق سيرف وخلها بيننا 😂",
+    ], onDecline:()=>{ const txt="أنا صاحب الجوال 😅 لا تفتح الملف السري تكفى 🙏"; SMS.unshift({from:"رقم غير معروف",time:"الآن",items:[{d:"اليوم الآن",t:txt}]}); setBadge("messages",(BADGES.messages||0)+1); notify("messages","رقم غير معروف",txt,()=>{openApp("messages");setTimeout(()=>openSms(0),350)}) }})],
+  [110000,()=>notify("calendar","التقويم","‼️ تسليم التقرير لأبو خالد – بعد 15 دقيقة",()=>openApp("calendar"))],
+  [140000,()=>notify("game",CONFIG.gameName,"🔥 نظّف السخان قبل ما تبرد الموية… والجائزة كود خصم 🎁",()=>openApp("game"))],
+];
+/* إشعار واتساب = آخر رسالة في المحادثة (ولو فيه رسالة جديدة تنضاف للمحادثة أول) */
+function waNotify(id,newMsg){
+  const c=CHATS.find(x=>x.id===id); if(!c) return;
+  if(newMsg){ const d=new Date(); const h=d.getHours(), m=String(d.getMinutes()).padStart(2,"0");
+    newMsg.tm=`${h%12||12}:${m} ${h<12?"ص":"م"}`; c.msgs.push(newMsg); c.time=newMsg.tm; }
+  c.unread=(c.unread||0)+(newMsg?1:0); setBadge("whatsapp",CHATS.reduce((a,x)=>a+x.unread,0));
+  const last=[...c.msgs].reverse().find(m=>m.t&&!m.me);
+  const text=(c.group&&last.who?last.who+": ":"")+last.t;
+  notify("whatsapp",c.name,text,()=>{openApp("whatsapp");setTimeout(()=>openChat(id),350)});
+  if(current==="whatsapp"&&stack.length===1) stack[0].innerHTML=APP_RENDER.whatsapp();
+}
+function startStory(){ STORY.forEach(([t,f])=>setTimeout(f,t)) }
+
+/* =====================================================================
+   لعبة نظّف السخان
+   ===================================================================== */
+const Game={
+  T:30, t:0, meter:0, removed:0, rocks:[], iv:null, spawnT:null, bubT:null,
+  stop(){clearInterval(this.iv);clearTimeout(this.spawnT);clearInterval(this.bubT);this.iv=null},
+  gm(){return $("#hzwrap")},
+  intro(){
+    this.stop();
+    this.gm().innerHTML=`<div class="hz-center">
+      <div style="width:120px">${ICONS.game.replace('<svg','<svg style="width:120px;height:120px;border-radius:28px;box-shadow:0 10px 30px #0005"')}</div>
+      <h1>${CONFIG.gameName}</h1>
+      <p class="lead">الترسبات قاعدة تتجمع في السخان 🪨<br>اضغط عليها بسرعة قبل ما تسد السخان وتبرد الموية 🥶<br>⏱️ صمد ${this.T} ثانية وتاخذ <b>كود خصم</b> 🎁</p>
+      <button class="gbtn" onclick="Game.start()">ابدأ التنظيف 🧽</button>
+      <div class="hz-tip">اللعبة من سيرف 💚</div></div>`;
+  },
+  start(){
+    this.stop(); this.t=this.T; this.meter=0; this.removed=0; this.rocks=[];
+    this.gm().innerHTML=`<div class="hz-hud"><span class="pill">⏱️ <span id="hzT">${this.T}</span></span><span class="pill">🪨 <span id="hzN">0</span></span><span class="pill">🌡️ <span id="hzC">60°</span></span></div>
+      <div class="hz-meter" id="hzM"><div class="lb"><span>الترسبات</span><span id="hzP">0%</span></div><div class="bar"><i id="hzB"></i></div></div>
+      <div class="hz-tank"><div class="hz-win" id="hzW"><div class="hz-rod"></div><div class="hz-gauge" id="hzG">🌡️ 60°</div></div></div>
+      <div class="hz-tip">اضغط على الترسبات 👆</div>`;
+    for(let i=0;i<3;i++) this.spawn();
+    this.loopSpawn();
+    this.bubT=setInterval(()=>this.bubble(),260);
+    this.iv=setInterval(()=>this.tick(),100);
+  },
+  loopSpawn(){
+    const p=1-this.t/this.T, d=760-430*p;
+    this.spawnT=setTimeout(()=>{ if(!this.iv) return; this.spawn(); if(p>.5 && Math.random()<.35) this.spawn(); this.loopSpawn() }, d);
+  },
+  spawn(){
+    const w=$("#hzW"); if(!w||this.rocks.length>=14) return;
+    const b=document.createElement("button"); b.className="hz-rock"+(Math.random()<.25?" big":"");
+    b.style.left=(14+Math.random()*72)+"%"; b.style.top=(30+Math.random()*60)+"%";
+    b.innerHTML="<span></span>"; b.setAttribute("aria-label","ترسبات");
+    const hit=e=>{ e.preventDefault(); this.hit(b) };
+    b.addEventListener("pointerdown",hit);
+    w.appendChild(b); this.rocks.push(b);
+  },
+  hit(b){
+    if(!this.iv||b.classList.contains("pop")) return;
+    b.classList.add("pop"); this.rocks=this.rocks.filter(r=>r!==b); setTimeout(()=>b.remove(),260);
+    this.removed++; this.meter=Math.max(0,this.meter-4);
+    const w=$("#hzW"), p=document.createElement("div"); p.className="hz-plus"; p.textContent="✨"; p.style.left=b.style.left; p.style.top=b.style.top; w.appendChild(p); setTimeout(()=>p.remove(),600);
+    try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
+    this.hud();
+  },
+  bubble(){
+    const w=$("#hzW"); if(!w) return;
+    const b=document.createElement("div"); b.className="hz-bub"; b.style.left=(10+Math.random()*80)+"%";
+    const s=4+Math.random()*7; b.style.width=b.style.height=s+"px"; b.style.animationDuration=(1.6+Math.random()*1.4)+"s";
+    w.appendChild(b); setTimeout(()=>b.remove(),3200);
+  },
+  tick(){
+    if(!$("#hzW")){ this.stop(); return }
+    this.t-=.1; this.meter=Math.min(100,this.meter+this.rocks.length*.16);
+    this.hud();
+    if(this.meter>=100) return this.end(false);
+    if(this.t<=0) return this.end(true);
+  },
+  hud(){
+    const m=Math.round(this.meter), temp=Math.round(60-this.meter*.45);
+    $("#hzT").textContent=Math.max(0,Math.ceil(this.t)); $("#hzN").textContent=this.removed;
+    $("#hzP").textContent=m+"%"; $("#hzB").style.width=m+"%"; $("#hzC").textContent=temp+"°"; $("#hzG").textContent="🌡️ "+temp+"°";
+    $("#hzM").classList.toggle("danger",m>65); $("#hzW").classList.toggle("cold",m>65);
+  },
+  end(win){
+    this.stop();
+    const best=Math.max(store.get("hzBest",0),this.removed); store.set("hzBest",best);
+    const share=encodeURIComponent(`نظّفت السخان وشلت ${this.removed} ترسبات 🪨🔥 في لعبة ${CONFIG.gameName} من جوال موظف سيرف الضايع 📵\nتقدر تهزمني؟ 👀`);
+    const url=encodeURIComponent(location.href.split("#")[0]);
+    if(win){
+      confetti(); store.set("hzWon",true);
+      this.gm().innerHTML=`<div class="hz-center"><div style="font-size:64px">🔥</div><h1 style="font-size:30px">السخان صار نظيف!</h1>
+        <p class="lead">شلت ${this.removed} ترسبات والموية رجعت حارة 😌<br>وهذي جائزتك 🎁</p>
+        <div class="hz-code">${CONFIG.gameCode}</div><div style="font-weight:700">خصم ${CONFIG.codesPercent} على طلبك من سيرف</div>
+        <button class="gbtn sm" onclick="copyCode('${CONFIG.gameCode}')">📋 انسخ الكود</button>
+        <a class="gbtn sm alt" style="text-decoration:none;display:block" href="${CONFIG.appStore}" target="_blank" rel="noopener">استخدمه في تطبيق سيرف</a>
+        <a class="gbtn sm alt" style="text-decoration:none;display:block" href="https://twitter.com/intent/tweet?text=${share}&url=${url}" target="_blank" rel="noopener">شارك نتيجتك على X</a>
+        <button class="gbtn sm alt" onclick="Game.start()">🔁 العب مرة ثانية</button></div>`;
+    }else{
+      this.gm().innerHTML=`<div class="hz-center"><div style="font-size:64px">🥶</div><h1 style="font-size:30px">الترسبات غلبتك!</h1>
+        <p class="lead">السخان انسد والموية صارت باردة<br>شلت ${this.removed} ترسبات • أفضل نتيجة ${best}</p>
+        <button class="gbtn" onclick="Game.start()">🔁 حاول مرة ثانية</button>
+        <a class="gbtn sm alt" style="text-decoration:none;display:block;margin-top:14px" href="${CONFIG.appStore}" target="_blank" rel="noopener">خلها على فني سيرف 😉 العادي بـ ${H.normal} ﷼</a></div>`;
+    }
+  }
+};
+// تشغيل مقدمة اللعبة عند فتحها
+const _openApp=openApp;
+openApp=function(id){_openApp(id); if(id==="game"){Game.stop();Game.intro()}};
+
+/* ---------- قصاصات احتفال ---------- */
+function confetti(){
+  const ph=$("#phone"); const cs=["#14968A","#125C55","#13756C","#FFD23F","#fff","#C6C6C5"];
+  for(let i=0;i<60;i++){const c=document.createElement("div");c.className="confetti";
+    c.style.left=Math.random()*100+"%";c.style.background=cs[i%cs.length];c.style.animationDuration=(1.6+Math.random()*1.6)+"s";c.style.animationDelay=Math.random()*.4+"s";
+    c.style.borderRadius=Math.random()>.5?"50%":"2px";ph.appendChild(c);setTimeout(()=>c.remove(),3800)}
+}
+
+/* ---------- مقاس الشاشة ---------- */
+function fit(){
+  const ph=$("#phone"), W=innerWidth, H=innerHeight;
+  if(W<500){ // جوال: املأ الشاشة
+    const k=W/390; ph.classList.add("full");
+    const h=H/k; ph.style.width="390px"; ph.style.height=h+"px"; ph.style.transform=`scale(${k})`;
+    ph.classList.toggle("short",h<780);
+  }else{ // كمبيوتر: جوال بالنص
+    ph.classList.remove("full","short"); ph.style.width=""; ph.style.height="";
+    const k=Math.min(1,(H-40)/844); ph.style.transform=k<1?`scale(${k})`:"";
+  }
+}
+addEventListener("resize",fit); fit();
+
+/* ---------- تشغيل ---------- */
+clock(); setInterval(clock,15000);
+buildHome(); buildLock();
+// تحميل مسبق للصور المصغرة
+PHOTOS.forEach(p=>{const i=new Image();i.src=p.thumb});
+</script>
+</body>
+</html>
